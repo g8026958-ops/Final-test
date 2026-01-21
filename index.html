@@ -1231,7 +1231,6 @@
         container.appendChild(div);
       }
 
-      // High sale items (top 3 by qty)
       const salesCount = {};
       state.invoices.forEach((inv) => {
         inv.items.forEach((it) => {
@@ -1575,6 +1574,7 @@
       renderAll();
       showToast("Logged in as " + state.role);
     }
+
     // EVENTS
     function setupEvents() {
       document
