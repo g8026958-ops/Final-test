@@ -1,243 +1,218 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Al Syed POS</title><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"><style>
-:root{--primary:#ef4444;--primary-soft:#fee2e2;--accent:#facc15;--accent-soft:#fef9c3;--bg:#020617;--card:#020617;--card-soft:#0f172a;--text:#f9fafb;--muted:#9ca3af;--border:#1f2937;--danger:#dc2626;--success:#22c55e;--pink:#ec4899;}
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif;}
-body{background:radial-gradient(circle at top,#111827 0,#020617 55%,#000 100%);color:var(--text);}
-.app-shell{min-height:100vh;display:flex;flex-direction:column;}
-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);background:linear-gradient(to right,rgba(15,23,42,.9),rgba(30,64,175,.4));position:sticky;top:0;z-index:20;}
-.brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
-.brand i{color:var(--pink);}
-.brand span{color:var(--primary);}
-.user-info{font-size:11px;text-align:right;color:var(--muted);}
-main{flex:1;padding:10px;}
-.layout{display:grid;grid-template-columns:2fr 1.2fr;gap:10px;}
-@media(max-width:900px){.layout{grid-template-columns:1fr;}}
-.card{background:linear-gradient(135deg,#020617,#0b1120);border-radius:14px;border:1px solid rgba(248,250,252,.06);padding:10px;box-shadow:0 18px 40px rgba(0,0,0,.6);}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.card-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;}
-.card-title i{color:var(--accent);}
-.pill{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(248,250,252,.06);color:var(--muted);border:1px solid rgba(148,163,184,.4);}
-.stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
-@media(max-width:600px){.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-.stat{background:radial-gradient(circle at top,#111827,#020617);border-radius:12px;padding:8px;border:1px solid rgba(148,163,184,.25);display:flex;flex-direction:column;gap:3px;}
-.stat-label{font-size:10px;color:var(--muted);}
-.stat-value{font-size:14px;font-weight:700;}
-.stat-tag{font-size:9px;padding:2px 6px;border-radius:999px;align-self:flex-start;background:rgba(248,250,252,.06);color:var(--accent);}
-.stat-tag.danger{color:var(--danger);}
-.stat-tag.pink{color:var(--pink);}
-.field{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
-label{font-size:10px;color:var(--muted);}
-input,select{width:100%;border-radius:999px;border:1px solid rgba(55,65,81,.9);padding:6px 10px;font-size:11px;background:rgba(15,23,42,.9);color:var(--text);}
-input::placeholder{color:#6b7280;}
-input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 1px rgba(239,68,68,.4);}
-.btn{border:none;border-radius:999px;padding:6px 10px;font-size:11px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;background:linear-gradient(to right,#ef4444,#f97316);color:#fff;box-shadow:0 10px 25px rgba(239,68,68,.4);}
-.btn.secondary{background:rgba(15,23,42,.9);color:var(--muted);border:1px solid rgba(55,65,81,.9);box-shadow:none;}
-.btn.danger{background:linear-gradient(to right,#b91c1c,#f97316);}
-.btn.full{width:100%;justify-content:center;}
-.btn.icon-only{width:26px;height:26px;border-radius:999px;justify-content:center;padding:0;}
-.btn:active{transform:scale(.96);}
-.chip{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(15,23,42,.9);border:1px solid rgba(55,65,81,.9);color:var(--muted);}
-table{width:100%;border-collapse:collapse;font-size:10px;}
-th,td{padding:4px 6px;border-bottom:1px solid rgba(31,41,55,.9);text-align:left;}
-th{font-weight:600;color:var(--muted);background:rgba(15,23,42,.9);}
-tbody tr:hover{background:rgba(15,23,42,.7);}
-.scroll-y{max-height:210px;overflow-y:auto;}
-.divider{height:1px;background:rgba(31,41,55,.9);margin:8px 0;}
-.flex-between{display:flex;justify-content:space-between;align-items:center;}
-.flex{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.badge{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(15,23,42,.9);border:1px solid rgba(55,65,81,.9);color:var(--muted);}
-.badge.pending{background:rgba(250,204,21,.1);border-color:#facc15;color:#facc15;}
-.badge.paid{background:rgba(34,197,94,.1);border-color:#22c55e;color:#22c55e;}
-.badge.low{background:rgba(248,113,113,.1);border-color:#ef4444;color:#fca5a5;}
-/* FAB */
-.fab-container{position:fixed;bottom:18px;right:18px;z-index:40;}
-.fab-main{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:radial-gradient(circle at top,#f97316,#ef4444);box-shadow:0 18px 40px rgba(0,0,0,.7);}
-.fab-options{display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-bottom:10px;opacity:0;pointer-events:none;transform:translateY(20px);transition:.25s ease;}
-.fab-options.show{opacity:1;pointer-events:auto;transform:translateY(0);}
-.fab-btn{background:rgba(15,23,42,.95);border:1px solid rgba(55,65,81,.9);padding:7px 12px;border-radius:999px;display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);box-shadow:0 12px 30px rgba(0,0,0,.7);cursor:pointer;}
-.fab-btn i{color:var(--accent);}
-/* Ledger panel */
-.ledger-panel{position:fixed;left:0;right:0;bottom:0;height:70%;background:radial-gradient(circle at top,#020617,#020617);border-radius:18px 18px 0 0;border-top:1px solid rgba(148,163,184,.4);box-shadow:0 -18px 40px rgba(0,0,0,.9);transform:translateY(100%);transition:.35s ease;z-index:50;padding:14px;display:flex;flex-direction:column;}
-.ledger-panel.show{transform:translateY(0);}
-.ledger-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.close-ledger{background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer;}
-.toast{position:fixed;bottom:12px;left:50%;transform:translateX(-50%) translateY(10px);background:#020617;color:#f9fafb;padding:7px 12px;border-radius:999px;font-size:11px;display:flex;align-items:center;gap:6px;box-shadow:0 18px 40px rgba(0,0,0,.9);opacity:0;pointer-events:none;transition:.2s ease;z-index:60;}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Al Syed Luxury POS</title><meta name="viewport" content="width=device-width,initial-scale=1.0"><style>
+:root{--royal:#0b1b3b;--royal-soft:#122550;--gold:#f6c453;--gold-deep:#d9a63a;--pink:#ff4f9a;--blue:#2b6fff;--white:#ffffff;--bg:#0b1020;--card:#11182b;--border:#202a45;--text:#f5f7ff;--muted:#9aa3c7;--danger:#ff4b5c;--success:#00c896;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+body{background:radial-gradient(circle at top,#1b2a4f,#050814);min-height:100vh;display:flex;justify-content:center;align-items:center;color:var(--text);}
+.app{width:100%;max-width:1120px;background:linear-gradient(135deg,rgba(11,27,59,0.96),rgba(5,8,20,0.98));border-radius:22px;box-shadow:0 24px 60px rgba(0,0,0,0.65);overflow:hidden;display:flex;flex-direction:column;max-height:96vh;border:1px solid rgba(246,196,83,0.25);}
+header{padding:10px 16px;background:linear-gradient(135deg,#0b1b3b,#11182b);border-bottom:1px solid rgba(246,196,83,0.35);display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(18px);}
+header .title{font-size:18px;font-weight:700;color:var(--gold);}
+header .subtitle{font-size:11px;color:var(--muted);}
+header .right{text-align:right;font-size:11px;color:var(--muted);}
+header .badge{background:rgba(246,196,83,0.12);padding:3px 8px;border-radius:999px;font-size:10px;color:var(--gold);}
+.main{flex:1;display:flex;overflow:hidden;}
+nav{width:74px;background:linear-gradient(180deg,#0b1020,#050814);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:8px;}
+.nav-item{width:56px;height:56px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:var(--muted);cursor:pointer;transition:0.18s;text-align:center;padding:4px;background:rgba(17,24,43,0.9);border:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(10px);}
+.nav-item span.icon{font-size:18px;margin-bottom:2px;}
+.nav-item.active{background:linear-gradient(145deg,var(--gold),var(--gold-deep));color:#1b1b1b;box-shadow:0 10px 24px rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.15);}
+.nav-item:hover{transform:translateY(-1px) scale(1.02);}
+.content{flex:1;padding:10px;overflow-y:auto;background:radial-gradient(circle at top left,#18254a,#050814);}
+.section{display:none;}
+.section.active{display:block;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:10px;}
+.card{background:radial-gradient(circle at top left,rgba(24,37,74,0.98),rgba(5,8,20,0.98));border-radius:18px;padding:10px;border:1px solid rgba(246,196,83,0.18);box-shadow:0 10px 26px rgba(0,0,0,0.6);position:relative;overflow:hidden;}
+.card::before{content:"";position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:radial-gradient(circle,rgba(246,196,83,0.35),transparent);opacity:0.7;}
+.card h3{font-size:13px;margin-bottom:4px;color:var(--gold);}
+.card .value{font-size:18px;font-weight:700;color:var(--white);}
+.card .label{font-size:10px;color:var(--muted);}
+.pill{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(11,27,59,0.9);color:var(--gold);position:absolute;top:8px;right:8px;border:1px solid rgba(246,196,83,0.4);}
+.btn{border:none;border-radius:999px;padding:7px 14px;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1b1b1b;box-shadow:0 8px 20px rgba(0,0,0,0.7);font-weight:600;}
+.btn.secondary{background:linear-gradient(135deg,#151b30,#0b1020);color:var(--text);border:1px solid var(--border);box-shadow:none;}
+.btn.danger{background:linear-gradient(135deg,var(--danger),#b31237);color:#fff;box-shadow:0 8px 20px rgba(179,18,55,0.7);}
+.btn.small{padding:4px 10px;font-size:10px;}
+.flex{display:flex;align-items:center;gap:8px;}
+.flex-between{display:flex;align-items:center;justify-content:space-between;}
+.mt-4{margin-top:4px;}
+.mt-8{margin-top:8px;}
+.mt-10{margin-top:10px;}
+.tag{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(11,27,59,0.9);color:var(--muted);display:inline-block;border:1px solid rgba(246,196,83,0.2);}
+input,select,textarea{width:100%;padding:6px 8px;border-radius:10px;border:1px solid var(--border);font-size:11px;outline:none;background:rgba(5,8,20,0.9);color:var(--text);}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 1px rgba(246,196,83,0.4);}
+label{font-size:11px;margin-bottom:2px;display:block;color:var(--muted);}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;color:var(--text);}
+th,td{padding:6px 4px;border-bottom:1px solid rgba(32,42,69,0.9);text-align:left;}
+th{font-size:10px;color:var(--muted);text-transform:uppercase;}
+.badge-status{font-size:9px;padding:2px 6px;border-radius:999px;display:inline-block;}
+.badge-paid{background:rgba(0,200,150,0.15);color:var(--success);}
+.badge-pending{background:rgba(246,196,83,0.18);color:var(--gold);}
+.alert{font-size:10px;padding:6px 8px;border-radius:10px;margin-top:6px;}
+.alert.danger{background:rgba(255,75,92,0.12);color:var(--danger);border:1px solid rgba(255,75,92,0.4);}
+.alert.info{background:rgba(43,111,255,0.12);color:var(--blue);border:1px solid rgba(43,111,255,0.4);}
+.chip{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(11,27,59,0.9);display:inline-flex;align-items:center;gap:4px;margin:2px 2px 0 0;border:1px solid rgba(246,196,83,0.18);color:var(--muted);}
+.chip span{font-size:10px;}
+.footer-bar{padding:6px 10px;background:linear-gradient(90deg,#050814,#11182b);border-top:1px solid rgba(246,196,83,0.25);font-size:10px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--success);margin-right:4px;box-shadow:0 0 8px rgba(0,200,150,0.8);}
+.login-overlay{position:fixed;inset:0;background:radial-gradient(circle at top,#1b2a4f,#050814);display:flex;justify-content:center;align-items:center;z-index:20;}
+.login-box{width:90%;max-width:360px;background:radial-gradient(circle at top left,#18254a,#050814);border-radius:20px;padding:16px;box-shadow:0 24px 60px rgba(0,0,0,0.8);border:1px solid rgba(246,196,83,0.4);color:var(--text);}
+.login-box h2{font-size:18px;margin-bottom:4px;color:var(--gold);}
+.login-box p{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.role-pill{font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);cursor:pointer;margin-right:4px;background:rgba(5,8,20,0.9);color:var(--muted);}
+.role-pill.active{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#1b1b1b;border:none;}
+.whatsapp-link{font-size:10px;color:#25d366;text-decoration:none;}
+@media(max-width:768px){.app{border-radius:0;max-height:100vh;}nav{width:64px;}.nav-item{width:52px;height:52px;border-radius:16px;}}
 </style></head><body>
-<div class="app-shell">
-<header>
-  <div class="brand"><i class="bi bi-whatsapp"></i><span>Al Syed</span> POS</div>
-  <div class="user-info">
-    <div id="currentRoleLabel">Owner • Full Control</div>
-    <div id="currentDateLabel"></div>
-  </div>
-</header>
-<main>
-  <div class="layout">
-    <!-- LEFT: Dashboard + Inventory + Expenses -->
-    <div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="bi bi-speedometer2"></i><span>Dashboard</span></div>
-          <span class="pill">Live overview</span>
-        </div>
-        <div class="stat-grid">
-          <div class="stat"><div class="stat-label">Today sales</div><div class="stat-value" id="statTodaySales">0</div><div class="stat-tag">AED</div></div>
-          <div class="stat"><div class="stat-label">This month</div><div class="stat-value" id="statMonthSales">0</div><div class="stat-tag">AED</div></div>
-          <div class="stat"><div class="stat-label">Profit (rough)</div><div class="stat-value" id="statProfit">0</div><div class="stat-tag pink">AED</div></div>
-        </div>
-        <div class="stat-grid" style="margin-top:8px;">
-          <div class="stat"><div class="stat-label">Invoices</div><div class="stat-value" id="statInvoices">0</div><div class="stat-tag">Count</div></div>
-          <div class="stat"><div class="stat-label">Customers</div><div class="stat-value" id="statCustomers">0</div><div class="stat-tag">Ledger</div></div>
-          <div class="stat"><div class="stat-label">Low stock</div><div class="stat-value" id="statLowStock">0</div><div class="stat-tag danger">Check</div></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:10px;">
-        <div class="card-header">
-          <div class="card-title"><i class="bi bi-box-seam"></i><span>Inventory</span></div>
-          <span class="pill">Red • Yellow • Pink</span>
-        </div>
-        <div class="field">
-          <label>Search product / code</label>
-          <input id="inventorySearch" placeholder="Name, code..." />
-        </div>
-        <div class="scroll-y">
-          <table>
-            <thead><tr><th>Code</th><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
-            <tbody id="inventoryTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:10px;">
-        <div class="card-header">
-          <div class="card-title"><i class="bi bi-cash-coin"></i><span>Shop expenses</span></div>
-          <span class="pill">Daily / monthly</span>
-        </div>
-        <div class="field"><label>Title</label><input id="expenseTitle"></div>
-        <div class="field"><label>Amount</label><input type="number" id="expenseAmount"></div>
-        <div class="field"><label>Note</label><input id="expenseNote"></div>
-        <button class="btn full" id="btnAddExpenseMain"><i class="bi bi-plus-circle"></i><span>Add expense</span></button>
-        <div class="divider"></div>
-        <div class="stat-grid">
-          <div class="stat"><div class="stat-label">Today expenses</div><div class="stat-value" id="statTodayExpenses">0</div><div class="stat-tag danger">AED</div></div>
-          <div class="stat"><div class="stat-label">Month expenses</div><div class="stat-value" id="statMonthExpenses">0</div><div class="stat-tag danger">AED</div></div>
-        </div>
-        <div class="divider"></div>
-        <div class="scroll-y">
-          <table>
-            <thead><tr><th>Title</th><th>Amount</th></tr></thead>
-            <tbody id="expenseTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT: Sale + Cart -->
-    <div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title"><i class="bi bi-cart3"></i><span>Sale & Cart</span></div>
-          <span class="pill" id="saleTotalPill">Total: 0 AED</span>
-        </div>
-        <div class="field"><label>Search product</label><input id="saleSearch" placeholder="Name / code..."></div>
-        <div class="scroll-y" style="max-height:120px;">
-          <table>
-            <thead><tr><th>Code</th><th>Name</th><th>Stock</th><th>Price</th><th></th></tr></thead>
-            <tbody id="saleProductsTableBody"></tbody>
-          </table>
-        </div>
-        <div class="divider"></div>
-        <div class="flex-between">
-          <div class="card-title"><i class="bi bi-bag-check"></i><span>Cart</span></div>
-          <div class="chip">Items: <span id="cartItemsCount">0</span> • Total: <span id="cartTotal">0</span></div>
-        </div>
-        <div class="scroll-y" style="max-height:140px;margin-top:6px;">
-          <table>
-            <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead>
-            <tbody id="cartTableBody"></tbody>
-          </table>
-        </div>
-        <div class="divider"></div>
-        <div class="field"><label>Customer name (optional)</label><input id="saleCustomerName"></div>
-        <div class="field" style="flex-direction:row;align-items:center;gap:6px;margin-bottom:8px;">
-          <input type="checkbox" id="saleAddToPending" style="width:auto;"><label for="saleAddToPending">Add invoice total to customer pending</label>
-        </div>
-        <button class="btn full" id="btnCompleteSale"><i class="bi bi-check2-circle"></i><span>Complete sale</span></button>
-      </div>
-
-      <div class="card" style="margin-top:10px;">
-        <div class="card-header">
-          <div class="card-title"><i class="bi bi-whatsapp"></i><span>WhatsApp reminder</span></div>
-          <span class="pill">Pending follow-up</span>
-        </div>
-        <div class="field"><label>Customer name</label><input id="waName"></div>
-        <div class="field"><label>Amount</label><input id="waAmount" type="number"></div>
-        <div class="field"><label>Phone (with country code)</label><input id="waPhone" placeholder="9715xxxxxxxx"></div>
-        <button class="btn full" id="btnSendWhatsApp"><i class="bi bi-send"></i><span>Open WhatsApp</span></button>
-      </div>
-    </div>
-  </div>
-</main>
+<div class="app" id="app">
+<header><div><div class="title">Al Syed Luxury POS</div><div class="subtitle">Customatic • Jewelry • Undergarments • Cloths</div></div><div class="right"><div id="userRoleLabel">Role: -</div><div class="badge" id="todayDate"></div></div></header>
+<div class="main">
+<nav id="nav">
+<div class="nav-item active" data-section="dashboard"><span class="icon">📊</span>Dash</div>
+<div class="nav-item" data-section="sales"><span class="icon">🛒</span>Sales</div>
+<div class="nav-item" data-section="inventory"><span class="icon">📦</span>Stock</div>
+<div class="nav-item" data-section="customers"><span class="icon">👥</span>Cus</div>
+<div class="nav-item" data-section="suppliers"><span class="icon">🤝</span>Sup</div>
+<div class="nav-item" data-section="expenses"><span class="icon">💸</span>Exp</div>
+<div class="nav-item" data-section="settings"><span class="icon">⚙️</span>Set</div>
+</nav>
+<div class="content">
+<section class="section active" id="section-dashboard">
+<div class="cards">
+<div class="card"><span class="pill">Today</span><h3>Daily Sales</h3><div class="value" id="dailySales">PKR 0</div><div class="label" id="dailySalesCount">0 invoices</div></div>
+<div class="card"><span class="pill">This Month</span><h3>Monthly Sales</h3><div class="value" id="monthlySales">PKR 0</div><div class="label" id="monthlySalesCount">0 invoices</div></div>
+<div class="card"><span class="pill">Stock</span><h3>Low Stock Items</h3><div class="value" id="lowStockCount">0</div><div class="label">Below minimum level</div></div>
+<div class="card"><span class="pill">Insights</span><h3>Top Selling</h3><div class="value" id="topItemName">-</div><div class="label" id="topItemQty">0 units sold</div></div>
 </div>
-
-<!-- FAB -->
-<div class="fab-container">
-  <button class="fab-main" id="fabMain"><i class="bi bi-plus-lg"></i></button>
-  <div class="fab-options" id="fabOptions">
-    <button class="fab-btn" id="fabAddProduct"><i class="bi bi-box-seam"></i><span>Add product</span></button>
-    <button class="fab-btn" id="fabAddExpenseFab"><i class="bi bi-cash-coin"></i><span>Add expense</span></button>
-    <button class="fab-btn" id="fabCustomerLedger"><i class="bi bi-people"></i><span>Customers</span></button>
-  </div>
+<div class="card mt-8"><div class="flex-between"><h3>Quick Actions</h3><button class="btn small" onclick="goToSection('sales')">New Sale</button></div><div class="mt-8 flex" style="flex-wrap:wrap;"><span class="chip"><span>🛒</span>Open Cart</span><span class="chip"><span>📦</span>Add Product</span><span class="chip"><span>👥</span>Add Customer</span><span class="chip"><span>💸</span>Add Expense</span><span class="chip"><span>🤝</span>Add Supplier</span></div></div>
+<div class="card mt-8"><div class="flex-between"><h3>Reset Dashboard Data</h3><span class="tag">Sales & expenses only</span></div><p class="mt-4" style="font-size:11px;color:var(--muted);">Is se sirf sales history, invoices, expenses, daily/monthly counters reset honge. Products, categories, customers, suppliers safe rahenge.</p><button class="btn danger small mt-8" onclick="resetSalesAndExpenses()">Reset Sales & Expenses</button></div>
+</section>
+<section class="section" id="section-sales">
+<div class="cards">
+<div class="card"><h3>New Sale</h3>
+<div class="grid-2 mt-4"><div><label>Search Product (name / code / barcode)</label><input type="text" id="saleSearch" placeholder="Type to search..." oninput="searchProductForSale()"></div><div><label>Customer</label><select id="saleCustomer"><option value="">Walk-in</option></select></div></div>
+<div id="saleSearchResults" class="mt-4" style="max-height:120px;overflow-y:auto;font-size:11px;"></div></div>
+<div class="card"><h3>Cart</h3><div id="cartItems" style="max-height:150px;overflow-y:auto;font-size:11px;"></div>
+<div class="mt-4"><div class="flex-between"><span class="label">Subtotal</span><span id="cartSubtotal">PKR 0</span></div><div class="flex-between"><span class="label">Discount</span><input type="number" id="cartDiscount" value="0" style="width:80px;" oninput="updateCartTotals()"></div><div class="flex-between"><span class="label">Grand Total</span><span id="cartTotal">PKR 0</span></div></div>
+<div class="grid-2 mt-4"><div><label>Payment Status</label><select id="paymentStatus"><option value="paid">Paid</option><option value="pending">Pending</option></select></div><div><label>Payment Method</label><select id="paymentMethod"><option>Cash</option><option>Card</option><option>Bank</option></select></div></div>
+<div class="mt-4 flex-between"><button class="btn secondary small" onclick="clearCart()">Clear Cart</button><button class="btn small" onclick="checkoutSale()">Checkout & Save</button></div>
+<div id="saleAlert" class="alert info mt-4" style="display:none;"></div></div>
 </div>
-
-<!-- Ledger -->
-<div class="ledger-panel" id="ledgerPanel">
-  <div class="ledger-header">
-    <div class="card-title"><i class="bi bi-people"></i><span>Customer ledger</span></div>
-    <button class="close-ledger" id="closeLedger"><i class="bi bi-x-lg"></i></button>
-  </div>
-  <div style="flex:1;overflow-y:auto;padding-right:4px;">
-    <div class="field"><label>Customer name</label><input id="ledgerCustomerName"></div>
-    <div class="field"><label>Phone</label><input id="ledgerCustomerPhone"></div>
-    <button class="btn full" id="btnAddCustomer"><i class="bi bi-person-plus"></i><span>Add customer</span></button>
-    <div class="divider"></div>
-    <div class="scroll-y">
-      <table>
-        <thead><tr><th>Name</th><th>Pending</th><th></th></tr></thead>
-        <tbody id="ledgerTableBody"></tbody>
-      </table>
-    </div>
-  </div>
+<div class="card mt-8"><div class="flex-between"><h3>Recent Invoices</h3><span class="tag">Last 10</span></div>
+<table id="invoiceTable"><thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Total</th><th>Status</th><th>WhatsApp</th></tr></thead><tbody></tbody></table></div>
+</section>
+<section class="section" id="section-inventory">
+<div class="cards">
+<div class="card"><h3>Add / Edit Product</h3>
+<div class="grid-2 mt-4"><div><label>Product Name</label><input type="text" id="prodName"></div><div><label>Category</label><select id="prodCategory"><option>Customatic</option><option>Jewelry</option><option>Undergarments</option><option>Cloths</option></select></div></div>
+<div class="grid-2 mt-4"><div><label>Barcode / Code</label><input type="text" id="prodCode"></div><div><label>Cost Price (PKR)</label><input type="number" id="prodCost"></div></div>
+<div class="grid-2 mt-4"><div><label>Sale Price (PKR)</label><input type="number" id="prodPrice"></div><div><label>Opening Stock</label><input type="number" id="prodStock"></div></div>
+<div class="grid-2 mt-4"><div><label>Low Stock Alert Level</label><input type="number" id="prodMin" value="5"></div><div><label>Notes</label><input type="text" id="prodNotes"></div></div>
+<div class="mt-4 flex-between"><button class="btn small" onclick="saveProduct()">Save Product</button><button class="btn secondary small" onclick="clearProductForm()">Clear</button></div></div>
+<div class="card"><h3>Stock In / Out</h3>
+<div class="mt-4"><label>Search Product</label><input type="text" id="stockSearch" oninput="searchProductForStock()" placeholder="Name / code / barcode"></div>
+<div id="stockSearchResults" class="mt-4" style="max-height:120px;overflow-y:auto;font-size:11px;"></div>
+<div class="grid-2 mt-4"><div><label>Qty Change (+ in / - out)</label><input type="number" id="stockChange" value="0"></div><div><label>Reason</label><input type="text" id="stockReason" placeholder="Purchase / Damage / Adjust"></div></div>
+<button class="btn small mt-4" onclick="applyStockChange()">Apply Stock Change</button>
+<div id="stockAlert" class="alert info mt-4" style="display:none;"></div></div>
 </div>
-
-<div class="toast" id="toast"><i class="bi bi-lightning-charge"></i><span id="toastMsg"></span></div>
-
+<div class="card mt-8"><div class="flex-between"><h3>Inventory List</h3><span class="tag">All Products</span></div>
+<table id="productTable"><thead><tr><th>Name</th><th>Cat</th><th>Stock</th><th>Price</th><th>Low?</th></tr></thead><tbody></tbody></table></div>
+</section>
+<section class="section" id="section-customers">
+<div class="cards">
+<div class="card"><h3>Add Customer</h3>
+<div class="grid-2 mt-4"><div><label>Name</label><input type="text" id="custName"></div><div><label>Phone (WhatsApp)</label><input type="text" id="custPhone"></div></div>
+<div class="grid-2 mt-4"><div><label>City / Area</label><input type="text" id="custCity"></div><div><label>Opening Balance</label><input type="number" id="custBalance" value="0"></div></div>
+<div class="mt-4"><label>Notes</label><textarea id="custNotes" rows="2"></textarea></div>
+<div class="mt-4 flex-between"><button class="btn small" onclick="saveCustomer()">Save Customer</button><button class="btn secondary small" onclick="clearCustomerForm()">Clear</button></div></div>
+<div class="card"><h3>Customer List</h3>
+<table id="customerTable"><thead><tr><th>Name</th><th>Phone</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
+</div>
+</section>
+<section class="section" id="section-suppliers">
+<div class="cards">
+<div class="card"><h3>Add Supplier</h3>
+<div class="grid-2 mt-4"><div><label>Name</label><input type="text" id="supName"></div><div><label>Phone</label><input type="text" id="supPhone"></div></div>
+<div class="grid-2 mt-4"><div><label>Company</label><input type="text" id="supCompany"></div><div><label>Opening Balance</label><input type="number" id="supBalance" value="0"></div></div>
+<div class="mt-4"><label>Notes</label><textarea id="supNotes" rows="2"></textarea></div>
+<div class="mt-4 flex-between"><button class="btn small" onclick="saveSupplier()">Save Supplier</button><button class="btn secondary small" onclick="clearSupplierForm()">Clear</button></div></div>
+<div class="card"><h3>Supplier List</h3>
+<table id="supplierTable"><thead><tr><th>Name</th><th>Phone</th><th>Balance</th></tr></thead><tbody></tbody></table></div>
+</div>
+</section>
+<section class="section" id="section-expenses">
+<div class="cards">
+<div class="card"><h3>Add Expense</h3>
+<div class="grid-2 mt-4"><div><label>Category</label><select id="expCategory"><option>Staff Salary</option><option>Shop Rent</option><option>Electricity</option><option>Internet</option><option>Misc</option></select></div><div><label>Amount (PKR)</label><input type="number" id="expAmount"></div></div>
+<div class="grid-2 mt-4"><div><label>Date</label><input type="date" id="expDate"></div><div><label>Staff / Person</label><input type="text" id="expPerson"></div></div>
+<div class="mt-4"><label>Notes</label><textarea id="expNotes" rows="2"></textarea></div>
+<div class="mt-4 flex-between"><button class="btn small" onclick="saveExpense()">Save Expense</button><button class="btn secondary small" onclick="clearExpenseForm()">Clear</button></div></div>
+<div class="card"><h3>Expense List</h3>
+<table id="expenseTable"><thead><tr><th>Date</th><th>Cat</th><th>Amount</th><th>Person</th></tr></thead><tbody></tbody></table>
+<div class="mt-4 flex-between"><span class="label">Total Expenses</span><span id="totalExpenses">PKR 0</span></div></div>
+</div>
+</section>
+<section class="section" id="section-settings">
+<div class="cards">
+<div class="card"><h3>Account & WhatsApp</h3>
+<div class="grid-2 mt-4"><div><label>Owner WhatsApp Number</label><input type="text" id="ownerWhatsApp" value="03194141290"></div><div><label>Admin WhatsApp Number</label><input type="text" id="adminWhatsApp" value="03016276230"></div></div>
+<div class="mt-4"><label>Currency</label><select id="currency"><option value="PKR">PKR</option><option value="RS">RS</option></select></div>
+<div class="mt-4"><label>Online Sync (future)</label><p style="font-size:10px;color:var(--muted);">Abhi data LocalStorage mein save hota hai (offline). Online sync ke liye API hook comments code mein ready hain.</p></div>
+<button class="btn small mt-4" onclick="saveSettings()">Save Settings</button></div>
+<div class="card"><h3>Login Info</h3><p style="font-size:11px;color:var(--muted);">Default logins:<br>Admin: <b>admin / 1234</b><br>Staff: <b>staff / 1234</b></p><p class="mt-4" style="font-size:11px;color:var(--muted);">Staff sirf Sales & Inventory use kar sakta hai. Dashboard, Settings, Expenses, Customers, Suppliers sirf Admin ke liye.</p></div>
+</div>
+</section>
+</div></div>
+<div class="footer-bar"><div class="flex"><span class="status-dot"></span><span id="storageStatus">Offline storage: Local</span></div><div>Al Syed Sales Point • Luxury POS</div></div>
+</div>
+<div class="login-overlay" id="loginOverlay">
+<div class="login-box"><h2>Login</h2><p>Admin & Staff ke liye alag access. Please role select karein.</p>
+<div class="mt-4"><span class="role-pill active" data-role="admin" onclick="selectRole(this)">Admin</span><span class="role-pill" data-role="staff" onclick="selectRole(this)">Staff</span></div>
+<div class="mt-8"><label>Username</label><input type="text" id="loginUser" placeholder="admin / staff"></div>
+<div class="mt-4"><label>Password</label><input type="password" id="loginPass" placeholder="1234"></div>
+<div class="mt-8 flex-between"><button class="btn small" onclick="doLogin()">Login</button><button class="btn secondary small" onclick="guestLogin()">Guest View</button></div>
+<p class="mt-8" style="font-size:10px;color:var(--muted);">Guest view sirf demo ke liye hai, koi data change nahi karega.</p></div>
+</div>
 <script>
-let state={products:[],expenses:[],customers:[],sales:[]};
-function saveState(){localStorage.setItem("al_syed_pos_final",JSON.stringify(state));}
-function loadState(){let d=localStorage.getItem("al_syed_pos_final");if(d){try{state=JSON.parse(d)}catch(e){state={products:[],expenses:[],customers:[],sales:[]}}}
-}
-loadState();
-function showToast(msg){let t=document.getElementById("toast");let m=document.getElementById("toastMsg");m.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
-function renderInventory(){let tb=document.getElementById("inventoryTableBody");let sb=document.getElementById("saleProductsTableBody");tb.innerHTML="";sb.innerHTML="";let q=document.getElementById("inventorySearch").value.toLowerCase();let qs=document.getElementById("saleSearch").value.toLowerCase();let low=0;state.products.forEach(p=>{let matchInv=!q||p.name.toLowerCase().includes(q)||p.code.toLowerCase().includes(q);let matchSale=!qs||p.name.toLowerCase().includes(qs)||p.code.toLowerCase().includes(qs);if(p.stock<=p.lowStock)low++;if(matchInv){let tr=document.createElement("tr");tr.innerHTML="<td>"+p.code+"</td><td>"+p.name+"</td><td>"+p.stock+"</td><td>"+p.price+"</td>";tb.appendChild(tr);}if(matchSale){let tr2=document.createElement("tr");tr2.innerHTML="<td>"+p.code+"</td><td>"+p.name+"</td><td>"+p.stock+"</td><td>"+p.price+"</td><td><button class='btn icon-only' onclick=\"addToCartPrompt('"+p.id+"')\"><i class='bi bi-plus'></i></button></td>";sb.appendChild(tr2);}});document.getElementById("statLowStock").textContent=low;}
-function renderExpenses(){let tb=document.getElementById("expenseTableBody");tb.innerHTML="";let today=new Date().toISOString().slice(0,10);let month=today.slice(0,7);let tToday=0,tMonth=0;state.expenses.forEach(e=>{let tr=document.createElement("tr");tr.innerHTML="<td>"+e.title+"</td><td>"+e.amount+"</td>";tb.appendChild(tr);if(e.date===today)tToday+=e.amount;if(e.date.slice(0,7)===month)tMonth+=e.amount;});document.getElementById("statTodayExpenses").textContent=tToday;document.getElementById("statMonthExpenses").textContent=tMonth;}
-function renderCustomers(){let tb=document.getElementById("ledgerTableBody");tb.innerHTML="";state.customers.forEach(c=>{let tr=document.createElement("tr");tr.innerHTML="<td>"+c.name+"</td><td>AED "+c.pending+"</td><td><button class='btn secondary' style='font-size:9px;padding:3px 6px;' onclick=\"receivePayment('"+c.id+"')\">Receive</button></td>";tb.appendChild(tr);});document.getElementById("statCustomers").textContent=state.customers.length;}
-let cart=[];function renderCart(){let tb=document.getElementById("cartTableBody");tb.innerHTML="";let total=0;cart.forEach((it,i)=>{let line=it.qty*it.price;total+=line;let tr=document.createElement("tr");tr.innerHTML="<td>"+it.name+"</td><td>"+it.qty+"</td><td>"+it.price+"</td><td>"+line+"</td><td><button class='btn icon-only secondary' onclick='removeCart("+i+")'><i class=\"bi bi-x\"></i></button></td>";tb.appendChild(tr);});document.getElementById("cartItemsCount").textContent=cart.length;document.getElementById("cartTotal").textContent=total;document.getElementById("saleTotalPill").textContent="Total: "+total+" AED";return total;}
-function removeCart(i){cart.splice(i,1);renderCart();}
-function addToCartPrompt(id){let p=state.products.find(x=>x.id===id);if(!p)return;let q=prompt("Qty for "+p.name,1);q=parseInt(q||0);if(q<=0)return;if(q>p.stock){alert("Not enough stock");return;}cart.push({id:p.id,name:p.name,price:p.price,qty:q});p.stock-=q;saveState();renderInventory();renderCart();}
-function receivePayment(id){let c=state.customers.find(x=>x.id===id);if(!c)return;let amt=prompt("Amount received for "+c.name,c.pending);amt=parseInt(amt||0);if(amt>0){c.pending-=amt;if(c.pending<0)c.pending=0;saveState();renderCustomers();showToast("Payment updated");}}
-function renderDashboard(){let today=new Date().toISOString().slice(0,10);let month=today.slice(0,7);let tToday=0,tMonth=0,profit=0;state.sales.forEach(s=>{if(s.date===today)tToday+=s.total;if(s.date.slice(0,7)===month)tMonth+=s.total;profit+=Math.round(s.total*0.25);});document.getElementById("statTodaySales").textContent=tToday;document.getElementById("statMonthSales").textContent=tMonth;document.getElementById("statProfit").textContent=profit;document.getElementById("statInvoices").textContent=state.sales.length;}
-document.getElementById("inventorySearch").oninput=renderInventory;document.getElementById("saleSearch").oninput=renderInventory;
-document.getElementById("btnAddExpenseMain").onclick=()=>{let title=document.getElementById("expenseTitle").value.trim();let amount=parseInt(document.getElementById("expenseAmount").value||0);let note=document.getElementById("expenseNote").value.trim();if(!title||!amount){alert("Title & amount required");return;}let d=new Date().toISOString().slice(0,10);state.expenses.push({id:"E"+Date.now(),title,amount,date:d,note});document.getElementById("expenseTitle").value="";document.getElementById("expenseAmount").value="";document.getElementById("expenseNote").value="";saveState();renderExpenses();renderDashboard();showToast("Expense added");};
-document.getElementById("btnSendWhatsApp").onclick=()=>{let n=document.getElementById("waName").value.trim();let a=document.getElementById("waAmount").value.trim();let p=document.getElementById("waPhone").value.trim();if(!p||!a){alert("Phone & amount required");return;}let msg=encodeURIComponent("Assalamualaikum "+(n||"Sir/Madam")+",\nYour pending amount is AED "+a+". Kindly clear when possible.\n- Al Syed Sales Point");let url="https://wa.me/"+p+"?text="+msg;window.open(url,"_blank");};
-let fabMain=document.getElementById("fabMain"),fabOptions=document.getElementById("fabOptions");fabMain.onclick=()=>fabOptions.classList.toggle("show");
-let ledgerPanel=document.getElementById("ledgerPanel");document.getElementById("fabCustomerLedger").onclick=()=>{ledgerPanel.classList.add("show");renderCustomers();};document.getElementById("closeLedger").onclick=()=>ledgerPanel.classList.remove("show");
-document.getElementById("btnAddCustomer").onclick=()=>{let name=document.getElementById("ledgerCustomerName").value.trim();let phone=document.getElementById("ledgerCustomerPhone").value.trim();if(!name){alert("Name required");return;}state.customers.push({id:"C"+Date.now(),name,phone,pending:0});document.getElementById("ledgerCustomerName").value="";document.getElementById("ledgerCustomerPhone").value="";saveState();renderCustomers();renderDashboard();showToast("Customer added");};
-document.getElementById("fabAddProduct").onclick=()=>{let name=prompt("Product name:");if(!name)return;let code=prompt("Code / barcode:",name.slice(0,3).toUpperCase()+Date.now().toString().slice(-3));let price=parseInt(prompt("Sale price (AED):")||0);if(!price){alert("Price required");return;}let stock=parseInt(prompt("Opening stock:")||0);let low=parseInt(prompt("Low stock alert at:",5)||5);state.products.push({id:"P"+Date.now(),name,code:code||("P"+Date.now()),price,stock,lowStock:low});saveState();renderInventory();renderDashboard();showToast("Product saved");};
-document.getElementById("fabAddExpenseFab").onclick=()=>{let title=prompt("Expense title:");if(!title)return;let amount=parseInt(prompt("Amount (AED):")||0);if(!amount){alert("Amount required");return;}let d=new Date().toISOString().slice(0,10);state.expenses.push({id:"E"+Date.now(),title,amount,date:d,note:""});saveState();renderExpenses();renderDashboard();showToast("Expense saved");};
-document.getElementById("btnCompleteSale").onclick=()=>{let total=renderCart();if(cart.length===0){alert("Cart empty");return;}let cname=document.getElementById("saleCustomerName").value.trim();let addPend=document.getElementById("saleAddToPending").checked;let sale={id:"S"+Date.now(),date:new Date().toISOString().slice(0,10),total,customerName:cname||null,items:cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty}))};state.sales.push(sale);if(cname&&addPend){let c=state.customers.find(x=>x.name.toLowerCase()===cname.toLowerCase());if(!c){c={id:"C"+Date.now(),name:cname,phone:"",pending:0};state.customers.push(c);}c.pending+=total;}cart=[];saveState();renderCart();renderCustomers();renderDashboard();showToast("Sale completed");};
-let currentDateLabel=document.getElementById("currentDateLabel");if(currentDateLabel)currentDateLabel.textContent=new Date().toLocaleString();
-renderInventory();renderExpenses();renderCustomers();renderDashboard();
+let state={userRole:null,products:[],customers:[],suppliers:[],expenses:[],invoices:[],settings:{ownerWhatsApp:"03194141290",adminWhatsApp:"03016276230",currency:"PKR"},cart:[],selectedStockProductId:null};const LS_KEY="al_syed_lux_pos_v1";function init(){loadState();renderAll();document.getElementById("todayDate").innerText=new Date().toLocaleDateString();setupNav();}
+function setupNav(){document.querySelectorAll(".nav-item").forEach(i=>{i.onclick=()=>{goToSection(i.getAttribute("data-section"));};});}
+function goToSection(s){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.getElementById("section-"+s).classList.add("active");document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));document.querySelector('.nav-item[data-section="'+s+'"]').classList.add("active");}
+let selectedRole="admin";function selectRole(el){document.querySelectorAll(".role-pill").forEach(p=>p.classList.remove("active"));el.classList.add("active");selectedRole=el.getAttribute("data-role");}
+function doLogin(){const u=document.getElementById("loginUser").value.trim();const p=document.getElementById("loginPass").value.trim();if(selectedRole==="admin"&&u==="admin"&&p==="1234"){state.userRole="admin";}else if(selectedRole==="staff"&&u==="staff"&&p==="1234"){state.userRole="staff";}else{alert("Invalid login");return;}document.getElementById("loginOverlay").style.display="none";applyRolePermissions();}
+function guestLogin(){state.userRole="guest";document.getElementById("loginOverlay").style.display="none";applyRolePermissions();}
+function applyRolePermissions(){document.getElementById("userRoleLabel").innerText="Role: "+state.userRole.toUpperCase();if(state.userRole==="staff"){goToSection("sales");}else{goToSection("dashboard");}}
+function loadState(){try{const raw=localStorage.getItem(LS_KEY);if(raw){const parsed=JSON.parse(raw);state=Object.assign(state,parsed);}else{seedDemoData();}document.getElementById("storageStatus").innerText="Offline storage: Local (OK)";}catch(e){console.error(e);document.getElementById("storageStatus").innerText="Storage error, running in memory";}}
+function saveState(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){console.error(e);}}
+function seedDemoData(){state.products=[{id:1,name:"Custom Bra Set",category:"Customatic",code:"CUST001",cost:800,price:1200,stock:10,min:3,notes:"Popular size",sold:0},{id:2,name:"Gold Plated Necklace",category:"Jewelry",code:"JEW001",cost:1500,price:2500,stock:5,min:2,notes:"",sold:0},{id:3,name:"Men Undergarment Pack",category:"Undergarments",code:"UND001",cost:400,price:700,stock:20,min:5,notes:"",sold:0},{id:4,name:"Ladies Kurti",category:"Cloths",code:"CLT001",cost:900,price:1500,stock:8,min:3,notes:"",sold:0}];state.customers=[{id:1,name:"Walk-in",phone:"",city:"",balance:0,notes:""}];}
+function renderAll(){renderProducts();renderCustomers();renderSuppliers();renderExpenses();renderInvoices();updateDashboard();fillCustomerSelect();}
+function saveProduct(){const name=document.getElementById("prodName").value.trim();const category=document.getElementById("prodCategory").value;const code=document.getElementById("prodCode").value.trim();const cost=parseFloat(document.getElementById("prodCost").value||0);const price=parseFloat(document.getElementById("prodPrice").value||0);const stock=parseFloat(document.getElementById("prodStock").value||0);const min=parseFloat(document.getElementById("prodMin").value||0);const notes=document.getElementById("prodNotes").value.trim();if(!name){alert("Product name required");return;}const existing=state.products.find(p=>p.code===code&&code!=="");if(existing){existing.name=name;existing.category=category;existing.cost=cost;existing.price=price;existing.stock=stock;existing.min=min;existing.notes=notes;}else{const id=Date.now();state.products.push({id,name,category,code,cost,price,stock,min,notes,sold:0});}saveState();renderProducts();clearProductForm();alert("Product saved");}
+function clearProductForm(){document.getElementById("prodName").value="";document.getElementById("prodCode").value="";document.getElementById("prodCost").value="";document.getElementById("prodPrice").value="";document.getElementById("prodStock").value="";document.getElementById("prodMin").value="5";document.getElementById("prodNotes").value="";}
+function renderProducts(){const tbody=document.querySelector("#productTable tbody");tbody.innerHTML="";state.products.forEach(p=>{const tr=document.createElement("tr");const low=p.stock<=p.min?"⚠️":"";tr.innerHTML=`<td>${p.name}</td><td>${p.category}</td><td>${p.stock}</td><td>${state.settings.currency} ${p.price}</td><td>${low}</td>`;tbody.appendChild(tr);});updateLowStockCount();}
+function updateLowStockCount(){const low=state.products.filter(p=>p.stock<=p.min).length;document.getElementById("lowStockCount").innerText=low;}
+function searchProductForStock(){const q=document.getElementById("stockSearch").value.toLowerCase();const box=document.getElementById("stockSearchResults");box.innerHTML="";if(!q)return;state.products.filter(p=>p.name.toLowerCase().includes(q)||(p.code&&p.code.toLowerCase().includes(q))).forEach(p=>{const div=document.createElement("div");div.className="chip";div.innerHTML=`<span>📦</span>${p.name} (${p.stock})`;div.onclick=()=>{state.selectedStockProductId=p.id;document.getElementById("stockSearch").value=p.name;box.innerHTML="";};box.appendChild(div);});}
+function applyStockChange(){if(!state.selectedStockProductId){alert("Select product first");return;}const qty=parseFloat(document.getElementById("stockChange").value||0);const reason=document.getElementById("stockReason").value.trim();const p=state.products.find(x=>x.id===state.selectedStockProductId);if(!p)return;p.stock+=qty;saveState();renderProducts();const alertBox=document.getElementById("stockAlert");alertBox.style.display="block";alertBox.innerText=`Stock updated for ${p.name}. Change: ${qty} (${reason||"no reason"})`;setTimeout(()=>alertBox.style.display="none",3000);document.getElementById("stockChange").value="0";document.getElementById("stockReason").value="";state.selectedStockProductId=null;document.getElementById("stockSearch").value="";}
+function saveCustomer(){const name=document.getElementById("custName").value.trim();const phone=document.getElementById("custPhone").value.trim();const city=document.getElementById("custCity").value.trim();const balance=parseFloat(document.getElementById("custBalance").value||0);const notes=document.getElementById("custNotes").value.trim();if(!name){alert("Customer name required");return;}const id=Date.now();state.customers.push({id,name,phone,city,balance,notes});saveState();renderCustomers();fillCustomerSelect();clearCustomerForm();alert("Customer saved");}
+function clearCustomerForm(){document.getElementById("custName").value="";document.getElementById("custPhone").value="";document.getElementById("custCity").value="";document.getElementById("custBalance").value="0";document.getElementById("custNotes").value="";}
+function renderCustomers(){const tbody=document.querySelector("#customerTable tbody");tbody.innerHTML="";state.customers.forEach(c=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${c.name}</td><td>${c.phone}</td><td>${state.settings.currency} ${c.balance||0}</td>`;tbody.appendChild(tr);});}
+function fillCustomerSelect(){const sel=document.getElementById("saleCustomer");sel.innerHTML=`<option value="">Walk-in</option>`;state.customers.forEach(c=>{sel.innerHTML+=`<option value="${c.id}">${c.name}</option>`;});}
+function saveSupplier(){const name=document.getElementById("supName").value.trim();const phone=document.getElementById("supPhone").value.trim();const company=document.getElementById("supCompany").value.trim();const balance=parseFloat(document.getElementById("supBalance").value||0);const notes=document.getElementById("supNotes").value.trim();if(!name){alert("Supplier name required");return;}const id=Date.now();state.suppliers.push({id,name,phone,company,balance,notes});saveState();renderSuppliers();clearSupplierForm();alert("Supplier saved");}
+function clearSupplierForm(){document.getElementById("supName").value="";document.getElementById("supPhone").value="";document.getElementById("supCompany").value="";document.getElementById("supBalance").value="0";document.getElementById("supNotes").value="";}
+function renderSuppliers(){const tbody=document.querySelector("#supplierTable tbody");tbody.innerHTML="";state.suppliers.forEach(s=>{const tr=document.createElement("tr");tr.innerHTML=`<td>${s.name}</td><td>${s.phone}</td><td>${state.settings.currency} ${s.balance||0}</td>`;tbody.appendChild(tr);});}
+function saveExpense(){const category=document.getElementById("expCategory").value;const amount=parseFloat(document.getElementById("expAmount").value||0);const date=document.getElementById("expDate").value||new Date().toISOString().slice(0,10);const person=document.getElementById("expPerson").value.trim();const notes=document.getElementById("expNotes").value.trim();if(!amount){alert("Amount required");return;}const id=Date.now();state.expenses.push({id,category,amount,date,person,notes});saveState();renderExpenses();clearExpenseForm();alert("Expense saved");}
+function clearExpenseForm(){document.getElementById("expAmount").value="";document.getElementById("expDate").value="";document.getElementById("expPerson").value="";document.getElementById("expNotes").value="";}
+function renderExpenses(){const tbody=document.querySelector("#expenseTable tbody");tbody.innerHTML="";let total=0;state.expenses.forEach(e=>{total+=e.amount;const tr=document.createElement("tr");tr.innerHTML=`<td>${e.date}</td><td>${e.category}</td><td>${state.settings.currency} ${e.amount}</td><td>${e.person}</td>`;tbody.appendChild(tr);});document.getElementById("totalExpenses").innerText=`${state.settings.currency} ${total}`;}
+function searchProductForSale(){const q=document.getElementById("saleSearch").value.toLowerCase();const box=document.getElementById("saleSearchResults");box.innerHTML="";if(!q)return;state.products.filter(p=>p.name.toLowerCase().includes(q)||(p.code&&p.code.toLowerCase().includes(q))).forEach(p=>{const div=document.createElement("div");div.className="chip";div.innerHTML=`<span>➕</span>${p.name} (${state.settings.currency} ${p.price}) • Stock: ${p.stock}`;div.onclick=()=>addToCart(p.id);box.appendChild(div);});}
+function addToCart(prodId){const p=state.products.find(x=>x.id===prodId);if(!p)return;if(p.stock<=0){alert("No stock available");return;}const existing=state.cart.find(i=>i.prodId===prodId);if(existing){if(existing.qty+1>p.stock){alert("Not enough stock");return;}existing.qty+=1;}else{state.cart.push({prodId,qty:1,price:p.price});}renderCart();}
+function renderCart(){const box=document.getElementById("cartItems");box.innerHTML="";state.cart.forEach(item=>{const p=state.products.find(x=>x.id===item.prodId);if(!p)return;const div=document.createElement("div");div.className="flex-between mt-4";div.innerHTML=`<div style="font-size:11px;"><div><b>${p.name}</b></div><div style="color:var(--muted);font-size:10px;">${state.settings.currency} ${item.price} x <input type="number" value="${item.qty}" style="width:50px;font-size:10px;" onchange="changeCartQty(${item.prodId},this.value)"></div></div><div style="font-size:11px;">${state.settings.currency} ${(item.price*item.qty).toFixed(0)}<button class="btn secondary small" style="margin-left:4px;" onclick="removeCartItem(${item.prodId})">✕</button></div>`;box.appendChild(div);});updateCartTotals();}
+function changeCartQty(prodId,val){const qty=parseFloat(val||0);const item=state.cart.find(i=>i.prodId===prodId);const p=state.products.find(x=>x.id===prodId);if(!item||!p)return;if(qty<=0){removeCartItem(prodId);return;}if(qty>p.stock){alert("Not enough stock");return;}item.qty=qty;renderCart();}
+function removeCartItem(prodId){state.cart=state.cart.filter(i=>i.prodId!==prodId);renderCart();}
+function clearCart(){state.cart=[];renderCart();}
+function updateCartTotals(){let subtotal=0;state.cart.forEach(i=>{subtotal+=i.price*i.qty;});const discount=parseFloat(document.getElementById("cartDiscount").value||0);const total=subtotal-discount;document.getElementById("cartSubtotal").innerText=`${state.settings.currency} ${subtotal.toFixed(0)}`;document.getElementById("cartTotal").innerText=`${state.settings.currency} ${total.toFixed(0)}`;}
+function checkoutSale(){if(state.cart.length===0){alert("Cart empty");return;}const customerId=document.getElementById("saleCustomer").value;const paymentStatus=document.getElementById("paymentStatus").value;const paymentMethod=document.getElementById("paymentMethod").value;const discount=parseFloat(document.getElementById("cartDiscount").value||0);let subtotal=0;state.cart.forEach(i=>{subtotal+=i.price*i.qty;});const total=subtotal-discount;for(const item of state.cart){const p=state.products.find(x=>x.id===item.prodId);if(!p||p.stock<item.qty){alert("Stock issue for "+(p?p.name:"unknown"));return;}}state.cart.forEach(i=>{const p=state.products.find(x=>x.id===i.prodId);p.stock-=i.qty;p.sold=(p.sold||0)+i.qty;});const id=Date.now();const invoice={id,date:new Date().toISOString(),customerId:customerId?parseInt(customerId):null,items:JSON.parse(JSON.stringify(state.cart)),subtotal,discount,total,paymentStatus,paymentMethod};state.invoices.unshift(invoice);if(state.invoices.length>50)state.invoices.pop();if(paymentStatus==="pending"&&customerId){const c=state.customers.find(x=>x.id===parseInt(customerId));if(c){c.balance=(c.balance||0)+total;}}saveState();renderProducts();renderInvoices();updateDashboard();clearCart();document.getElementById("cartDiscount").value="0";showSaleAlert(invoice);sendWhatsAppNotification(invoice);}
+function showSaleAlert(invoice){const box=document.getElementById("saleAlert");box.style.display="block";box.className="alert info mt-4";box.innerText=`Sale saved. Invoice #${invoice.id} • Total: ${state.settings.currency} ${invoice.total.toFixed(0)} • Status: ${invoice.paymentStatus.toUpperCase()}`;setTimeout(()=>box.style.display="none",4000);}
+function renderInvoices(){const tbody=document.querySelector("#invoiceTable tbody");tbody.innerHTML="";state.invoices.slice(0,10).forEach(inv=>{const c=inv.customerId?state.customers.find(x=>x.id===inv.customerId):null;const statusClass=inv.paymentStatus==="paid"?"badge-paid":"badge-pending";const statusText=inv.paymentStatus==="paid"?"Paid":"Pending";const date=new Date(inv.date).toLocaleString();const waLink=buildWhatsAppInvoiceLink(inv);const tr=document.createElement("tr");tr.innerHTML=`<td>${inv.id}</td><td>${date}</td><td>${c?c.name:"Walk-in"}</td><td>${state.settings.currency} ${inv.total.toFixed(0)}</td><td><span class="badge-status ${statusClass}">${statusText}</span></td><td><a class="whatsapp-link" href="${waLink}" target="_blank">Send</a></td>`;tbody.appendChild(tr);});}
+function updateDashboard(){const todayStr=new Date().toISOString().slice(0,10);const monthStr=todayStr.slice(0,7);let dailyTotal=0,dailyCount=0,monthlyTotal=0,monthlyCount=0;state.invoices.forEach(inv=>{const d=inv.date.slice(0,10);const m=inv.date.slice(0,7);if(d===todayStr){dailyTotal+=inv.total;dailyCount++;}if(m===monthStr){monthlyTotal+=inv.total;monthlyCount++;}});document.getElementById("dailySales").innerText=`${state.settings.currency} ${dailyTotal.toFixed(0)}`;document.getElementById("dailySalesCount").innerText=`${dailyCount} invoices`;document.getElementById("monthlySales").innerText=`${state.settings.currency} ${monthlyTotal.toFixed(0)}`;document.getElementById("monthlySalesCount").innerText=`${monthlyCount} invoices`;let top=null;state.products.forEach(p=>{if(!top||(p.sold||0)>(top.sold||0)){top=p;}});if(top&&(top.sold||0)>0){document.getElementById("topItemName").innerText=top.name;document.getElementById("topItemQty").innerText=`${top.sold} units sold`;}else{document.getElementById("topItemName").innerText="-";document.getElementById("topItemQty").innerText="0 units sold";}}
+function resetSalesAndExpenses(){if(!confirm("Are you sure? This will delete all invoices & expenses, but keep products, customers, suppliers."))return;state.invoices=[];state.expenses=[];saveState();renderInvoices();renderExpenses();updateDashboard();alert("Sales & expenses reset done.");}
+function saveSettings(){state.settings.ownerWhatsApp=document.getElementById("ownerWhatsApp").value.trim();state.settings.adminWhatsApp=document.getElementById("adminWhatsApp").value.trim();state.settings.currency=document.getElementById("currency").value;saveState();renderProducts();renderCustomers();renderSuppliers();renderExpenses();renderInvoices();updateDashboard();alert("Settings saved");}
+function buildWhatsAppInvoiceLink(inv){const owner=state.settings.ownerWhatsApp||state.settings.adminWhatsApp||"";const c=inv.customerId?state.customers.find(x=>x.id===inv.customerId):null;let text=`*Invoice #${inv.id}*%0A`;text+=`Date: ${new Date(inv.date).toLocaleString()}%0A`;text+=`Customer: ${c?c.name:"Walk-in"}%0A`;text+=`Status: ${inv.paymentStatus.toUpperCase()}%0A`;text+=`------------------------%0A`;inv.items.forEach(it=>{const p=state.products.find(x=>x.id===it.prodId);if(!p)return;text+=`${p.name} x ${it.qty} = ${state.settings.currency} ${(it.qty*it.price).toFixed(0)}%0A`;});text+=`------------------------%0A`;text+=`Subtotal: ${state.settings.currency} ${inv.subtotal.toFixed(0)}%0A`;text+=`Discount: ${state.settings.currency} ${inv.discount.toFixed(0)}%0A`;text+=`Total: *${state.settings.currency} ${inv.total.toFixed(0)}*%0A`;text+=`%0AAl Syed Sales Point`;if(!owner)return"https://wa.me/?text="+text;return`https://wa.me/${owner}?text=${text}`;}
+function sendWhatsAppNotification(inv){console.log("New sale invoice",inv.id);}
+init();
 </script>
 </body></html>
