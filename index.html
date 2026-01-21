@@ -1,547 +1,243 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Al Syed POS</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
-  <style>
-    :root{
-      --primary:#2563eb;--primary-soft:#e0edff;
-      --bg:#f5f5f7;--card:#ffffff;
-      --text:#111827;--muted:#6b7280;
-      --border:#e5e7eb;--danger:#dc2626;--success:#16a34a;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif;}
-    body{background:var(--bg);color:var(--text);}
-    .app-shell{min-height:100vh;display:flex;flex-direction:column;}
-    header{
-      background:var(--card);padding:10px 14px;border-bottom:1px solid var(--border);
-      display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;
-    }
-    .brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
-    .brand span{color:var(--primary);}
-    .user-info{font-size:11px;text-align:right;color:var(--muted);}
-    main{flex:1;padding:10px;}
-    .layout{display:grid;grid-template-columns:2fr 1.2fr;gap:10px;}
-    @media(max-width:900px){.layout{grid-template-columns:1fr;}}
-    .card{
-      background:var(--card);border:1px solid var(--border);border-radius:10px;
-      padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);
-    }
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-    .card-title{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;}
-    .pill{background:var(--primary-soft);color:var(--primary);padding:2px 8px;border-radius:999px;font-size:11px;}
-    .field{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
-    label{font-size:11px;color:var(--muted);}
-    input,select{
-      padding:6px 10px;border-radius:999px;border:1px solid var(--border);
-      background:#f9fafb;font-size:12px;
-    }
-    input:focus,select:focus{border-color:var(--primary);background:#fff;outline:none;}
-    .btn{
-      padding:6px 10px;border-radius:999px;border:none;background:var(--primary);
-      color:#fff;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
-    }
-    .btn.secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);}
-    .btn.danger{background:var(--danger);}
-    .btn.full{width:100%;justify-content:center;}
-    table{width:100%;border-collapse:collapse;font-size:11px;}
-    th,td{padding:4px 6px;border-bottom:1px solid var(--border);text-align:left;}
-    .scroll-y{max-height:220px;overflow-y:auto;}
-    .badge{font-size:11px;padding:2px 6px;border-radius:999px;background:var(--primary-soft);color:var(--primary);}
-    .row{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--muted);}
-    .divider{height:1px;background:var(--border);margin:8px 0;}
-
-    /* Floating Button */
-    .fab-container{position:fixed;bottom:20px;right:20px;z-index:200;}
-    .fab-main{
-      width:55px;height:55px;border-radius:50%;background:var(--primary);color:#fff;border:none;
-      font-size:22px;display:flex;align-items:center;justify-content:center;
-      box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;
-    }
-    .fab-options{
-      display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-bottom:10px;
-      opacity:0;pointer-events:none;transform:translateY(20px);transition:.25s ease;
-    }
-    .fab-options.show{opacity:1;pointer-events:auto;transform:translateY(0);}
-    .fab-btn{
-      background:#fff;border:1px solid var(--border);padding:8px 12px;border-radius:999px;
-      display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;
-      box-shadow:0 4px 12px rgba(0,0,0,.15);
-    }
-    .fab-btn i{font-size:16px;color:var(--primary);}
-
-    /* Ledger Panel */
-    .ledger-panel{
-      position:fixed;bottom:0;left:0;right:0;height:70%;background:var(--card);
-      border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);
-      transform:translateY(100%);transition:.35s ease;z-index:300;padding:16px;display:flex;flex-direction:column;
-    }
-    .ledger-panel.show{transform:translateY(0);}
-    .ledger-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-    .close-ledger{background:none;border:none;font-size:20px;color:var(--danger);cursor:pointer;}
-  </style>
-</head>
-<body>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Al Syed POS</title><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"><style>
+:root{--primary:#ef4444;--primary-soft:#fee2e2;--accent:#facc15;--accent-soft:#fef9c3;--bg:#020617;--card:#020617;--card-soft:#0f172a;--text:#f9fafb;--muted:#9ca3af;--border:#1f2937;--danger:#dc2626;--success:#22c55e;--pink:#ec4899;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif;}
+body{background:radial-gradient(circle at top,#111827 0,#020617 55%,#000 100%);color:var(--text);}
+.app-shell{min-height:100vh;display:flex;flex-direction:column;}
+header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);background:linear-gradient(to right,rgba(15,23,42,.9),rgba(30,64,175,.4));position:sticky;top:0;z-index:20;}
+.brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
+.brand i{color:var(--pink);}
+.brand span{color:var(--primary);}
+.user-info{font-size:11px;text-align:right;color:var(--muted);}
+main{flex:1;padding:10px;}
+.layout{display:grid;grid-template-columns:2fr 1.2fr;gap:10px;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+.card{background:linear-gradient(135deg,#020617,#0b1120);border-radius:14px;border:1px solid rgba(248,250,252,.06);padding:10px;box-shadow:0 18px 40px rgba(0,0,0,.6);}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.card-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;}
+.card-title i{color:var(--accent);}
+.pill{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(248,250,252,.06);color:var(--muted);border:1px solid rgba(148,163,184,.4);}
+.stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+@media(max-width:600px){.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.stat{background:radial-gradient(circle at top,#111827,#020617);border-radius:12px;padding:8px;border:1px solid rgba(148,163,184,.25);display:flex;flex-direction:column;gap:3px;}
+.stat-label{font-size:10px;color:var(--muted);}
+.stat-value{font-size:14px;font-weight:700;}
+.stat-tag{font-size:9px;padding:2px 6px;border-radius:999px;align-self:flex-start;background:rgba(248,250,252,.06);color:var(--accent);}
+.stat-tag.danger{color:var(--danger);}
+.stat-tag.pink{color:var(--pink);}
+.field{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
+label{font-size:10px;color:var(--muted);}
+input,select{width:100%;border-radius:999px;border:1px solid rgba(55,65,81,.9);padding:6px 10px;font-size:11px;background:rgba(15,23,42,.9);color:var(--text);}
+input::placeholder{color:#6b7280;}
+input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 1px rgba(239,68,68,.4);}
+.btn{border:none;border-radius:999px;padding:6px 10px;font-size:11px;display:inline-flex;align-items:center;gap:5px;cursor:pointer;background:linear-gradient(to right,#ef4444,#f97316);color:#fff;box-shadow:0 10px 25px rgba(239,68,68,.4);}
+.btn.secondary{background:rgba(15,23,42,.9);color:var(--muted);border:1px solid rgba(55,65,81,.9);box-shadow:none;}
+.btn.danger{background:linear-gradient(to right,#b91c1c,#f97316);}
+.btn.full{width:100%;justify-content:center;}
+.btn.icon-only{width:26px;height:26px;border-radius:999px;justify-content:center;padding:0;}
+.btn:active{transform:scale(.96);}
+.chip{font-size:10px;padding:2px 8px;border-radius:999px;background:rgba(15,23,42,.9);border:1px solid rgba(55,65,81,.9);color:var(--muted);}
+table{width:100%;border-collapse:collapse;font-size:10px;}
+th,td{padding:4px 6px;border-bottom:1px solid rgba(31,41,55,.9);text-align:left;}
+th{font-weight:600;color:var(--muted);background:rgba(15,23,42,.9);}
+tbody tr:hover{background:rgba(15,23,42,.7);}
+.scroll-y{max-height:210px;overflow-y:auto;}
+.divider{height:1px;background:rgba(31,41,55,.9);margin:8px 0;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
+.flex{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.badge{font-size:9px;padding:2px 6px;border-radius:999px;background:rgba(15,23,42,.9);border:1px solid rgba(55,65,81,.9);color:var(--muted);}
+.badge.pending{background:rgba(250,204,21,.1);border-color:#facc15;color:#facc15;}
+.badge.paid{background:rgba(34,197,94,.1);border-color:#22c55e;color:#22c55e;}
+.badge.low{background:rgba(248,113,113,.1);border-color:#ef4444;color:#fca5a5;}
+/* FAB */
+.fab-container{position:fixed;bottom:18px;right:18px;z-index:40;}
+.fab-main{width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:radial-gradient(circle at top,#f97316,#ef4444);box-shadow:0 18px 40px rgba(0,0,0,.7);}
+.fab-options{display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-bottom:10px;opacity:0;pointer-events:none;transform:translateY(20px);transition:.25s ease;}
+.fab-options.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+.fab-btn{background:rgba(15,23,42,.95);border:1px solid rgba(55,65,81,.9);padding:7px 12px;border-radius:999px;display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);box-shadow:0 12px 30px rgba(0,0,0,.7);cursor:pointer;}
+.fab-btn i{color:var(--accent);}
+/* Ledger panel */
+.ledger-panel{position:fixed;left:0;right:0;bottom:0;height:70%;background:radial-gradient(circle at top,#020617,#020617);border-radius:18px 18px 0 0;border-top:1px solid rgba(148,163,184,.4);box-shadow:0 -18px 40px rgba(0,0,0,.9);transform:translateY(100%);transition:.35s ease;z-index:50;padding:14px;display:flex;flex-direction:column;}
+.ledger-panel.show{transform:translateY(0);}
+.ledger-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.close-ledger{background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer;}
+.toast{position:fixed;bottom:12px;left:50%;transform:translateX(-50%) translateY(10px);background:#020617;color:#f9fafb;padding:7px 12px;border-radius:999px;font-size:11px;display:flex;align-items:center;gap:6px;box-shadow:0 18px 40px rgba(0,0,0,.9);opacity:0;pointer-events:none;transition:.2s ease;z-index:60;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+</style></head><body>
 <div class="app-shell">
-  <header>
-    <div class="brand">
-      <i class="bi bi-shop-window"></i>
-      <span>Al Syed</span> POS
-    </div>
-    <div class="user-info">
-      <div id="currentRoleLabel">POS Ready</div>
-      <div id="currentDateLabel"></div>
-    </div>
-  </header>
-
-  <main>
-    <div class="layout">
-
-      <!-- LEFT: SALE / CART -->
+<header>
+  <div class="brand"><i class="bi bi-whatsapp"></i><span>Al Syed</span> POS</div>
+  <div class="user-info">
+    <div id="currentRoleLabel">Owner • Full Control</div>
+    <div id="currentDateLabel"></div>
+  </div>
+</header>
+<main>
+  <div class="layout">
+    <!-- LEFT: Dashboard + Inventory + Expenses -->
+    <div>
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <i class="bi bi-receipt"></i>
-            <span>New Sale</span>
-          </div>
-          <span class="pill" id="saleTotalPill">Total: 0 PKR</span>
+          <div class="card-title"><i class="bi bi-speedometer2"></i><span>Dashboard</span></div>
+          <span class="pill">Live overview</span>
         </div>
-
-        <div class="field">
-          <label>Select Product</label>
-          <select id="saleProductSelect">
-            <option value="">-- Select --</option>
-          </select>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-label">Today sales</div><div class="stat-value" id="statTodaySales">0</div><div class="stat-tag">AED</div></div>
+          <div class="stat"><div class="stat-label">This month</div><div class="stat-value" id="statMonthSales">0</div><div class="stat-tag">AED</div></div>
+          <div class="stat"><div class="stat-label">Profit (rough)</div><div class="stat-value" id="statProfit">0</div><div class="stat-tag pink">AED</div></div>
         </div>
-
-        <div class="field">
-          <label>Quantity</label>
-          <input type="number" id="saleQty" value="1" min="1" />
+        <div class="stat-grid" style="margin-top:8px;">
+          <div class="stat"><div class="stat-label">Invoices</div><div class="stat-value" id="statInvoices">0</div><div class="stat-tag">Count</div></div>
+          <div class="stat"><div class="stat-label">Customers</div><div class="stat-value" id="statCustomers">0</div><div class="stat-tag">Ledger</div></div>
+          <div class="stat"><div class="stat-label">Low stock</div><div class="stat-value" id="statLowStock">0</div><div class="stat-tag danger">Check</div></div>
         </div>
-
-        <button class="btn full" id="btnAddToCart">
-          <i class="bi bi-cart-plus"></i>
-          <span>Add to Cart</span>
-        </button>
-
-        <div class="divider"></div>
-
-        <div class="field">
-          <label>Customer (optional)</label>
-          <select id="saleCustomerSelect">
-            <option value="">Walk-in</option>
-          </select>
-        </div>
-
-        <div class="field" style="flex-direction:row;align-items:center;gap:6px;">
-          <input type="checkbox" id="saleAddToPending" style="width:auto;" />
-          <label for="saleAddToPending">Add invoice total to customer pending</label>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="scroll-y" style="margin-bottom:6px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Line</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="cartTableBody"></tbody>
-          </table>
-        </div>
-
-        <button class="btn full" id="btnCompleteSale">
-          <i class="bi bi-check2-circle"></i>
-          <span>Complete Sale</span>
-        </button>
       </div>
 
-      <!-- RIGHT: DASHBOARD / INVENTORY / EXPENSES -->
-      <div class="card">
+      <div class="card" style="margin-top:10px;">
         <div class="card-header">
-          <div class="card-title">
-            <i class="bi bi-speedometer2"></i>
-            <span>Dashboard</span>
-          </div>
+          <div class="card-title"><i class="bi bi-box-seam"></i><span>Inventory</span></div>
+          <span class="pill">Red • Yellow • Pink</span>
         </div>
-        <div class="row" style="margin-bottom:8px;">
-          <div>Products: <b id="summaryProducts">0</b></div>
-          <div>Expenses: <b id="summaryExpenses">0</b> PKR</div>
-          <div>Customers: <b id="summaryCustomers">0</b></div>
-          <div>Today Sales: <b id="summarySales">0</b> PKR</div>
+        <div class="field">
+          <label>Search product / code</label>
+          <input id="inventorySearch" placeholder="Name, code..." />
         </div>
-
-        <div class="divider"></div>
-
-        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Inventory</div>
-        <div class="scroll-y" style="margin-bottom:8px;">
+        <div class="scroll-y">
           <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Price</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Code</th><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
             <tbody id="inventoryTableBody"></tbody>
           </table>
         </div>
+      </div>
 
+      <div class="card" style="margin-top:10px;">
+        <div class="card-header">
+          <div class="card-title"><i class="bi bi-cash-coin"></i><span>Shop expenses</span></div>
+          <span class="pill">Daily / monthly</span>
+        </div>
+        <div class="field"><label>Title</label><input id="expenseTitle"></div>
+        <div class="field"><label>Amount</label><input type="number" id="expenseAmount"></div>
+        <div class="field"><label>Note</label><input id="expenseNote"></div>
+        <button class="btn full" id="btnAddExpenseMain"><i class="bi bi-plus-circle"></i><span>Add expense</span></button>
         <div class="divider"></div>
-
-        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Expenses</div>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-label">Today expenses</div><div class="stat-value" id="statTodayExpenses">0</div><div class="stat-tag danger">AED</div></div>
+          <div class="stat"><div class="stat-label">Month expenses</div><div class="stat-value" id="statMonthExpenses">0</div><div class="stat-tag danger">AED</div></div>
+        </div>
+        <div class="divider"></div>
         <div class="scroll-y">
           <table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Title</th><th>Amount</th></tr></thead>
             <tbody id="expenseTableBody"></tbody>
           </table>
         </div>
       </div>
-
     </div>
-  </main>
+
+    <!-- RIGHT: Sale + Cart -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="bi bi-cart3"></i><span>Sale & Cart</span></div>
+          <span class="pill" id="saleTotalPill">Total: 0 AED</span>
+        </div>
+        <div class="field"><label>Search product</label><input id="saleSearch" placeholder="Name / code..."></div>
+        <div class="scroll-y" style="max-height:120px;">
+          <table>
+            <thead><tr><th>Code</th><th>Name</th><th>Stock</th><th>Price</th><th></th></tr></thead>
+            <tbody id="saleProductsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="divider"></div>
+        <div class="flex-between">
+          <div class="card-title"><i class="bi bi-bag-check"></i><span>Cart</span></div>
+          <div class="chip">Items: <span id="cartItemsCount">0</span> • Total: <span id="cartTotal">0</span></div>
+        </div>
+        <div class="scroll-y" style="max-height:140px;margin-top:6px;">
+          <table>
+            <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead>
+            <tbody id="cartTableBody"></tbody>
+          </table>
+        </div>
+        <div class="divider"></div>
+        <div class="field"><label>Customer name (optional)</label><input id="saleCustomerName"></div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:6px;margin-bottom:8px;">
+          <input type="checkbox" id="saleAddToPending" style="width:auto;"><label for="saleAddToPending">Add invoice total to customer pending</label>
+        </div>
+        <button class="btn full" id="btnCompleteSale"><i class="bi bi-check2-circle"></i><span>Complete sale</span></button>
+      </div>
+
+      <div class="card" style="margin-top:10px;">
+        <div class="card-header">
+          <div class="card-title"><i class="bi bi-whatsapp"></i><span>WhatsApp reminder</span></div>
+          <span class="pill">Pending follow-up</span>
+        </div>
+        <div class="field"><label>Customer name</label><input id="waName"></div>
+        <div class="field"><label>Amount</label><input id="waAmount" type="number"></div>
+        <div class="field"><label>Phone (with country code)</label><input id="waPhone" placeholder="9715xxxxxxxx"></div>
+        <button class="btn full" id="btnSendWhatsApp"><i class="bi bi-send"></i><span>Open WhatsApp</span></button>
+      </div>
+    </div>
+  </div>
+</main>
 </div>
 
-<!-- Floating Button -->
+<!-- FAB -->
 <div class="fab-container">
-  <button class="fab-main" id="fabMain">
-    <i class="bi bi-plus-lg"></i>
-  </button>
+  <button class="fab-main" id="fabMain"><i class="bi bi-plus-lg"></i></button>
   <div class="fab-options" id="fabOptions">
-    <button class="fab-btn" id="fabAddProduct">
-      <i class="bi bi-box-seam"></i><span>Add Product</span>
-    </button>
-    <button class="fab-btn" id="fabAddExpense">
-      <i class="bi bi-cash-coin"></i><span>Add Expense</span>
-    </button>
-    <button class="fab-btn" id="fabCustomerLedger">
-      <i class="bi bi-people"></i><span>Customers</span>
-    </button>
+    <button class="fab-btn" id="fabAddProduct"><i class="bi bi-box-seam"></i><span>Add product</span></button>
+    <button class="fab-btn" id="fabAddExpenseFab"><i class="bi bi-cash-coin"></i><span>Add expense</span></button>
+    <button class="fab-btn" id="fabCustomerLedger"><i class="bi bi-people"></i><span>Customers</span></button>
   </div>
 </div>
 
-<!-- Customer Ledger Panel -->
+<!-- Ledger -->
 <div class="ledger-panel" id="ledgerPanel">
   <div class="ledger-header">
-    <h3 style="font-size:16px;">Customer Ledger</h3>
-    <button class="close-ledger" id="closeLedger">
-      <i class="bi bi-x-lg"></i>
-    </button>
+    <div class="card-title"><i class="bi bi-people"></i><span>Customer ledger</span></div>
+    <button class="close-ledger" id="closeLedger"><i class="bi bi-x-lg"></i></button>
   </div>
-  <div class="ledger-body" style="flex:1;overflow-y:auto;padding-right:4px;">
-    <div class="field">
-      <label>Customer Name</label>
-      <input type="text" id="ledgerCustomerName" />
-    </div>
-    <div class="field">
-      <label>Phone Number</label>
-      <input type="text" id="ledgerCustomerPhone" />
-    </div>
-    <button class="btn full" id="btnAddCustomer">
-      <i class="bi bi-person-plus"></i><span>Add Customer</span>
-    </button>
-
+  <div style="flex:1;overflow-y:auto;padding-right:4px;">
+    <div class="field"><label>Customer name</label><input id="ledgerCustomerName"></div>
+    <div class="field"><label>Phone</label><input id="ledgerCustomerPhone"></div>
+    <button class="btn full" id="btnAddCustomer"><i class="bi bi-person-plus"></i><span>Add customer</span></button>
     <div class="divider"></div>
-
-    <h4 style="font-size:13px;margin-bottom:4px;">Customer List</h4>
     <div class="scroll-y">
       <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Pending</th>
-            <th></th>
-          </tr>
-        </thead>
+        <thead><tr><th>Name</th><th>Pending</th><th></th></tr></thead>
         <tbody id="ledgerTableBody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
+<div class="toast" id="toast"><i class="bi bi-lightning-charge"></i><span id="toastMsg"></span></div>
+
 <script>
-  // ---------- STATE ----------
-  let state = {
-    products: [],
-    expenses: [],
-    customers: [],
-    sales: []
-  };
-
-  function saveState(){
-    localStorage.setItem("al_syed_pos_full", JSON.stringify(state));
-  }
-
-  function loadState(){
-    let d = localStorage.getItem("al_syed_pos_full");
-    if(d){
-      try{ state = JSON.parse(d); }
-      catch(e){ state = {products:[],expenses:[],customers:[],sales:[]}; }
-    }
-  }
-
-  loadState();
-
-  // ---------- RENDER HELPERS ----------
-  function renderInventory(){
-    let tbody = document.getElementById("inventoryTableBody");
-    let select = document.getElementById("saleProductSelect");
-    tbody.innerHTML = "";
-    select.innerHTML = '<option value="">-- Select --</option>';
-
-    state.products.forEach(p=>{
-      let tr = document.createElement("tr");
-      tr.innerHTML = '<td>'+p.name+'</td><td>'+p.price+'</td>';
-      tbody.appendChild(tr);
-
-      let opt = document.createElement("option");
-      opt.value = p.id;
-      opt.textContent = p.name + " ("+p.price+")";
-      select.appendChild(opt);
-    });
-  }
-
-  function renderExpenses(){
-    let tbody = document.getElementById("expenseTableBody");
-    tbody.innerHTML = "";
-    state.expenses.forEach(e=>{
-      let tr = document.createElement("tr");
-      tr.innerHTML = '<td>'+e.title+'</td><td>'+e.amount+'</td>';
-      tbody.appendChild(tr);
-    });
-  }
-
-  function renderCustomers(){
-    let tbody = document.getElementById("ledgerTableBody");
-    let select = document.getElementById("saleCustomerSelect");
-    tbody.innerHTML = "";
-    select.innerHTML = '<option value="">Walk-in</option>';
-
-    state.customers.forEach(c=>{
-      let tr = document.createElement("tr");
-      tr.innerHTML =
-        '<td>'+c.name+'</td>'+
-        '<td>PKR '+c.pending+'</td>'+
-        '<td><button class="btn secondary" style="font-size:11px;padding:3px 8px;" onclick="receivePayment(\''+c.id+'\')">Receive</button></td>';
-      tbody.appendChild(tr);
-
-      let opt = document.createElement("option");
-      opt.value = c.id;
-      opt.textContent = c.name + " (PKR "+c.pending+")";
-      select.appendChild(opt);
-    });
-  }
-
-  function renderSummary(){
-    let p = state.products.length;
-    let e = state.expenses.reduce((t,x)=>t + x.amount, 0);
-    let c = state.customers.length;
-    let today = new Date().toISOString().slice(0,10);
-    let s = state.sales.filter(x=>x.date === today).reduce((t,x)=>t + x.total, 0);
-
-    document.getElementById("summaryProducts").textContent = p;
-    document.getElementById("summaryExpenses").textContent = e;
-    document.getElementById("summaryCustomers").textContent = c;
-    document.getElementById("summarySales").textContent = s;
-  }
-
-  // ---------- CART ----------
-  let cart = [];
-
-  function renderCart(){
-    let tbody = document.getElementById("cartTableBody");
-    tbody.innerHTML = "";
-    let total = 0;
-
-    cart.forEach((item,idx)=>{
-      let line = item.qty * item.price;
-      total += line;
-      let tr = document.createElement("tr");
-      tr.innerHTML =
-        '<td>'+item.name+'</td>'+
-        '<td>'+item.qty+'</td>'+
-        '<td>'+item.price+'</td>'+
-        '<td>'+line+'</td>'+
-        '<td><button class="btn secondary" style="font-size:10px;padding:2px 6px;" onclick="removeCartItem('+idx+')"><i class="bi bi-x"></i></button></td>';
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById("saleTotalPill").textContent = "Total: "+total+" PKR";
-    return total;
-  }
-
-  function removeCartItem(idx){
-    cart.splice(idx,1);
-    renderCart();
-  }
-
-  // ---------- CUSTOMER PENDING ----------
-  function receivePayment(id){
-    let c = state.customers.find(x=>x.id === id);
-    if(!c) return;
-    let amt = prompt("Enter amount received:", c.pending);
-    amt = parseInt(amt || 0);
-    if(amt > 0){
-      c.pending -= amt;
-      if(c.pending < 0) c.pending = 0;
-      saveState();
-      renderCustomers();
-      renderSummary();
-    }
-  }
-
-  // ---------- FLOATING BUTTON ----------
-  let fabMain = document.getElementById("fabMain");
-  let fabOptions = document.getElementById("fabOptions");
-  fabMain.onclick = ()=>{ fabOptions.classList.toggle("show"); };
-
-  // ---------- LEDGER PANEL ----------
-  let ledgerPanel = document.getElementById("ledgerPanel");
-  document.getElementById("fabCustomerLedger").onclick = ()=>{
-    ledgerPanel.classList.add("show");
-    renderCustomers();
-  };
-  document.getElementById("closeLedger").onclick = ()=>{
-    ledgerPanel.classList.remove("show");
-  };
-
-  // ---------- ADD CUSTOMER ----------
-  document.getElementById("btnAddCustomer").onclick = ()=>{
-    let name = document.getElementById("ledgerCustomerName").value.trim();
-    let phone = document.getElementById("ledgerCustomerPhone").value.trim();
-    if(!name){ alert("Name required"); return; }
-
-    state.customers.push({
-      id: "C"+Date.now(),
-      name,
-      phone,
-      pending: 0
-    });
-
-    saveState();
-    document.getElementById("ledgerCustomerName").value = "";
-    document.getElementById("ledgerCustomerPhone").value = "";
-    renderCustomers();
-    renderSummary();
-  };
-
-  // ---------- ADD PRODUCT (FLOATING) ----------
-  document.getElementById("fabAddProduct").onclick = ()=>{
-    let name = prompt("Product name:");
-    if(!name) return;
-    let price = prompt("Sale price (PKR):");
-    price = parseInt(price || 0);
-    if(!price){ alert("Price required"); return; }
-
-    state.products.push({
-      id: "P"+Date.now(),
-      name,
-      price
-    });
-
-    saveState();
-    alert("Product saved: "+name+" (PKR "+price+")");
-    renderInventory();
-    renderSummary();
-  };
-
-  // ---------- ADD EXPENSE (FLOATING) ----------
-  document.getElementById("fabAddExpense").onclick = ()=>{
-    let title = prompt("Expense title:");
-    if(!title) return;
-    let amount = prompt("Expense amount (PKR):");
-    amount = parseInt(amount || 0);
-    if(!amount){ alert("Amount required"); return; }
-
-    state.expenses.push({
-      id: "E"+Date.now(),
-      title,
-      amount,
-      date: new Date().toISOString().slice(0,10)
-    });
-
-    saveState();
-    alert("Expense saved: "+title+" (PKR "+amount+")");
-    renderExpenses();
-    renderSummary();
-  };
-
-  // ---------- SALE BUTTONS ----------
-  document.getElementById("btnAddToCart").onclick = ()=>{
-    let pid = document.getElementById("saleProductSelect").value;
-    let qty = parseInt(document.getElementById("saleQty").value || 0);
-    if(!pid){ alert("Select product"); return; }
-    if(qty <= 0){ alert("Quantity must be > 0"); return; }
-
-    let p = state.products.find(x=>x.id === pid);
-    if(!p){ alert("Product not found"); return; }
-
-    cart.push({
-      id: p.id,
-      name: p.name,
-      price: p.price,
-      qty
-    });
-
-    renderCart();
-  };
-
-  document.getElementById("btnCompleteSale").onclick = ()=>{
-    let total = renderCart();
-    if(cart.length === 0){
-      alert("Cart is empty");
-      return;
-    }
-
-    let customerId = document.getElementById("saleCustomerSelect").value;
-    let addToPending = document.getElementById("saleAddToPending").checked;
-
-    let sale = {
-      id: "S"+Date.now(),
-      date: new Date().toISOString().slice(0,10),
-      total,
-      customerId: customerId || null,
-      items: cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty}))
-    };
-
-    state.sales.push(sale);
-
-    if(customerId && addToPending){
-      let c = state.customers.find(x=>x.id === customerId);
-      if(c){
-        c.pending += total;
-      }
-    }
-
-    saveState();
-    alert("Sale completed. Total: "+total+" PKR");
-    cart = [];
-    renderCart();
-    renderCustomers();
-    renderSummary();
-  };
-
-  // ---------- INIT ----------
-  let currentDateLabel = document.getElementById("currentDateLabel");
-  if(currentDateLabel){
-    currentDateLabel.textContent = new Date().toLocaleString();
-  }
-
-  renderInventory();
-  renderExpenses();
-  renderCustomers();
-  renderSummary();
+let state={products:[],expenses:[],customers:[],sales:[]};
+function saveState(){localStorage.setItem("al_syed_pos_final",JSON.stringify(state));}
+function loadState(){let d=localStorage.getItem("al_syed_pos_final");if(d){try{state=JSON.parse(d)}catch(e){state={products:[],expenses:[],customers:[],sales:[]}}}
+}
+loadState();
+function showToast(msg){let t=document.getElementById("toast");let m=document.getElementById("toastMsg");m.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+function renderInventory(){let tb=document.getElementById("inventoryTableBody");let sb=document.getElementById("saleProductsTableBody");tb.innerHTML="";sb.innerHTML="";let q=document.getElementById("inventorySearch").value.toLowerCase();let qs=document.getElementById("saleSearch").value.toLowerCase();let low=0;state.products.forEach(p=>{let matchInv=!q||p.name.toLowerCase().includes(q)||p.code.toLowerCase().includes(q);let matchSale=!qs||p.name.toLowerCase().includes(qs)||p.code.toLowerCase().includes(qs);if(p.stock<=p.lowStock)low++;if(matchInv){let tr=document.createElement("tr");tr.innerHTML="<td>"+p.code+"</td><td>"+p.name+"</td><td>"+p.stock+"</td><td>"+p.price+"</td>";tb.appendChild(tr);}if(matchSale){let tr2=document.createElement("tr");tr2.innerHTML="<td>"+p.code+"</td><td>"+p.name+"</td><td>"+p.stock+"</td><td>"+p.price+"</td><td><button class='btn icon-only' onclick=\"addToCartPrompt('"+p.id+"')\"><i class='bi bi-plus'></i></button></td>";sb.appendChild(tr2);}});document.getElementById("statLowStock").textContent=low;}
+function renderExpenses(){let tb=document.getElementById("expenseTableBody");tb.innerHTML="";let today=new Date().toISOString().slice(0,10);let month=today.slice(0,7);let tToday=0,tMonth=0;state.expenses.forEach(e=>{let tr=document.createElement("tr");tr.innerHTML="<td>"+e.title+"</td><td>"+e.amount+"</td>";tb.appendChild(tr);if(e.date===today)tToday+=e.amount;if(e.date.slice(0,7)===month)tMonth+=e.amount;});document.getElementById("statTodayExpenses").textContent=tToday;document.getElementById("statMonthExpenses").textContent=tMonth;}
+function renderCustomers(){let tb=document.getElementById("ledgerTableBody");tb.innerHTML="";state.customers.forEach(c=>{let tr=document.createElement("tr");tr.innerHTML="<td>"+c.name+"</td><td>AED "+c.pending+"</td><td><button class='btn secondary' style='font-size:9px;padding:3px 6px;' onclick=\"receivePayment('"+c.id+"')\">Receive</button></td>";tb.appendChild(tr);});document.getElementById("statCustomers").textContent=state.customers.length;}
+let cart=[];function renderCart(){let tb=document.getElementById("cartTableBody");tb.innerHTML="";let total=0;cart.forEach((it,i)=>{let line=it.qty*it.price;total+=line;let tr=document.createElement("tr");tr.innerHTML="<td>"+it.name+"</td><td>"+it.qty+"</td><td>"+it.price+"</td><td>"+line+"</td><td><button class='btn icon-only secondary' onclick='removeCart("+i+")'><i class=\"bi bi-x\"></i></button></td>";tb.appendChild(tr);});document.getElementById("cartItemsCount").textContent=cart.length;document.getElementById("cartTotal").textContent=total;document.getElementById("saleTotalPill").textContent="Total: "+total+" AED";return total;}
+function removeCart(i){cart.splice(i,1);renderCart();}
+function addToCartPrompt(id){let p=state.products.find(x=>x.id===id);if(!p)return;let q=prompt("Qty for "+p.name,1);q=parseInt(q||0);if(q<=0)return;if(q>p.stock){alert("Not enough stock");return;}cart.push({id:p.id,name:p.name,price:p.price,qty:q});p.stock-=q;saveState();renderInventory();renderCart();}
+function receivePayment(id){let c=state.customers.find(x=>x.id===id);if(!c)return;let amt=prompt("Amount received for "+c.name,c.pending);amt=parseInt(amt||0);if(amt>0){c.pending-=amt;if(c.pending<0)c.pending=0;saveState();renderCustomers();showToast("Payment updated");}}
+function renderDashboard(){let today=new Date().toISOString().slice(0,10);let month=today.slice(0,7);let tToday=0,tMonth=0,profit=0;state.sales.forEach(s=>{if(s.date===today)tToday+=s.total;if(s.date.slice(0,7)===month)tMonth+=s.total;profit+=Math.round(s.total*0.25);});document.getElementById("statTodaySales").textContent=tToday;document.getElementById("statMonthSales").textContent=tMonth;document.getElementById("statProfit").textContent=profit;document.getElementById("statInvoices").textContent=state.sales.length;}
+document.getElementById("inventorySearch").oninput=renderInventory;document.getElementById("saleSearch").oninput=renderInventory;
+document.getElementById("btnAddExpenseMain").onclick=()=>{let title=document.getElementById("expenseTitle").value.trim();let amount=parseInt(document.getElementById("expenseAmount").value||0);let note=document.getElementById("expenseNote").value.trim();if(!title||!amount){alert("Title & amount required");return;}let d=new Date().toISOString().slice(0,10);state.expenses.push({id:"E"+Date.now(),title,amount,date:d,note});document.getElementById("expenseTitle").value="";document.getElementById("expenseAmount").value="";document.getElementById("expenseNote").value="";saveState();renderExpenses();renderDashboard();showToast("Expense added");};
+document.getElementById("btnSendWhatsApp").onclick=()=>{let n=document.getElementById("waName").value.trim();let a=document.getElementById("waAmount").value.trim();let p=document.getElementById("waPhone").value.trim();if(!p||!a){alert("Phone & amount required");return;}let msg=encodeURIComponent("Assalamualaikum "+(n||"Sir/Madam")+",\nYour pending amount is AED "+a+". Kindly clear when possible.\n- Al Syed Sales Point");let url="https://wa.me/"+p+"?text="+msg;window.open(url,"_blank");};
+let fabMain=document.getElementById("fabMain"),fabOptions=document.getElementById("fabOptions");fabMain.onclick=()=>fabOptions.classList.toggle("show");
+let ledgerPanel=document.getElementById("ledgerPanel");document.getElementById("fabCustomerLedger").onclick=()=>{ledgerPanel.classList.add("show");renderCustomers();};document.getElementById("closeLedger").onclick=()=>ledgerPanel.classList.remove("show");
+document.getElementById("btnAddCustomer").onclick=()=>{let name=document.getElementById("ledgerCustomerName").value.trim();let phone=document.getElementById("ledgerCustomerPhone").value.trim();if(!name){alert("Name required");return;}state.customers.push({id:"C"+Date.now(),name,phone,pending:0});document.getElementById("ledgerCustomerName").value="";document.getElementById("ledgerCustomerPhone").value="";saveState();renderCustomers();renderDashboard();showToast("Customer added");};
+document.getElementById("fabAddProduct").onclick=()=>{let name=prompt("Product name:");if(!name)return;let code=prompt("Code / barcode:",name.slice(0,3).toUpperCase()+Date.now().toString().slice(-3));let price=parseInt(prompt("Sale price (AED):")||0);if(!price){alert("Price required");return;}let stock=parseInt(prompt("Opening stock:")||0);let low=parseInt(prompt("Low stock alert at:",5)||5);state.products.push({id:"P"+Date.now(),name,code:code||("P"+Date.now()),price,stock,lowStock:low});saveState();renderInventory();renderDashboard();showToast("Product saved");};
+document.getElementById("fabAddExpenseFab").onclick=()=>{let title=prompt("Expense title:");if(!title)return;let amount=parseInt(prompt("Amount (AED):")||0);if(!amount){alert("Amount required");return;}let d=new Date().toISOString().slice(0,10);state.expenses.push({id:"E"+Date.now(),title,amount,date:d,note:""});saveState();renderExpenses();renderDashboard();showToast("Expense saved");};
+document.getElementById("btnCompleteSale").onclick=()=>{let total=renderCart();if(cart.length===0){alert("Cart empty");return;}let cname=document.getElementById("saleCustomerName").value.trim();let addPend=document.getElementById("saleAddToPending").checked;let sale={id:"S"+Date.now(),date:new Date().toISOString().slice(0,10),total,customerName:cname||null,items:cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty}))};state.sales.push(sale);if(cname&&addPend){let c=state.customers.find(x=>x.name.toLowerCase()===cname.toLowerCase());if(!c){c={id:"C"+Date.now(),name:cname,phone:"",pending:0};state.customers.push(c);}c.pending+=total;}cart=[];saveState();renderCart();renderCustomers();renderDashboard();showToast("Sale completed");};
+let currentDateLabel=document.getElementById("currentDateLabel");if(currentDateLabel)currentDateLabel.textContent=new Date().toLocaleString();
+renderInventory();renderExpenses();renderCustomers();renderDashboard();
 </script>
-</body>
-</html>
+</body></html>
