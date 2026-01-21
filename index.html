@@ -1,183 +1,547 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Al Syed POS</title><meta name="viewport" content="width=device-width,initial-scale=1.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"><style>
-:root{--primary:#2563eb;--primary-soft:#e0edff;--bg:#f5f5f7;--card:#ffffff;--text:#111827;--muted:#6b7280;--border:#e5e7eb;--danger:#dc2626;}
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif;}
-body{background:var(--bg);color:var(--text);}
-.app-shell{min-height:100vh;display:flex;flex-direction:column;}
-header{background:var(--card);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;}
-.brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
-.brand span{color:var(--primary);}
-.user-info{font-size:12px;text-align:right;color:var(--muted);}
-main{flex:1;padding:10px;}
-.layout{display:grid;grid-template-columns:1fr;gap:10px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.1);}
-.field{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;}
-input{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#f9fafb;font-size:12px;}
-input:focus{border-color:var(--primary);background:#fff;outline:none;}
-.btn{padding:6px 10px;border-radius:999px;border:none;background:var(--primary);color:#fff;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
-.btn.secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);}
-.scroll-y{max-height:220px;overflow-y:auto;font-size:12px;}
-table{width:100%;border-collapse:collapse;font-size:12px;}
-th,td{padding:4px 6px;border-bottom:1px solid var(--border);text-align:left;}
-/* Floating Button */
-.fab-container{position:fixed;bottom:20px;right:20px;z-index:200;}
-.fab-main{width:55px;height:55px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;}
-.fab-options{display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-bottom:10px;opacity:0;pointer-events:none;transform:translateY(20px);transition:.25s ease;}
-.fab-options.show{opacity:1;pointer-events:auto;transform:translateY(0);}
-.fab-btn{background:#fff;border:1px solid var(--border);padding:8px 12px;border-radius:999px;display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15);}
-.fab-btn i{font-size:16px;color:var(--primary);}
-/* Ledger Panel */
-.ledger-panel{position:fixed;bottom:0;left:0;right:0;height:70%;background:var(--card);border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);transform:translateY(100%);transition:.35s ease;z-index:300;padding:16px;display:flex;flex-direction:column;}
-.ledger-panel.show{transform:translateY(0);}
-.ledger-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.close-ledger{background:none;border:none;font-size:20px;color:var(--danger);cursor:pointer;}
-.divider{height:1px;background:var(--border);margin:10px 0;}
-</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Al Syed POS</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <style>
+    :root{
+      --primary:#2563eb;--primary-soft:#e0edff;
+      --bg:#f5f5f7;--card:#ffffff;
+      --text:#111827;--muted:#6b7280;
+      --border:#e5e7eb;--danger:#dc2626;--success:#16a34a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif;}
+    body{background:var(--bg);color:var(--text);}
+    .app-shell{min-height:100vh;display:flex;flex-direction:column;}
+    header{
+      background:var(--card);padding:10px 14px;border-bottom:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10;
+    }
+    .brand{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;}
+    .brand span{color:var(--primary);}
+    .user-info{font-size:11px;text-align:right;color:var(--muted);}
+    main{flex:1;padding:10px;}
+    .layout{display:grid;grid-template-columns:2fr 1.2fr;gap:10px;}
+    @media(max-width:900px){.layout{grid-template-columns:1fr;}}
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:10px;
+      padding:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);
+    }
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .card-title{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;}
+    .pill{background:var(--primary-soft);color:var(--primary);padding:2px 8px;border-radius:999px;font-size:11px;}
+    .field{display:flex;flex-direction:column;gap:3px;margin-bottom:6px;}
+    label{font-size:11px;color:var(--muted);}
+    input,select{
+      padding:6px 10px;border-radius:999px;border:1px solid var(--border);
+      background:#f9fafb;font-size:12px;
+    }
+    input:focus,select:focus{border-color:var(--primary);background:#fff;outline:none;}
+    .btn{
+      padding:6px 10px;border-radius:999px;border:none;background:var(--primary);
+      color:#fff;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+    }
+    .btn.secondary{background:var(--bg);color:var(--text);border:1px solid var(--border);}
+    .btn.danger{background:var(--danger);}
+    .btn.full{width:100%;justify-content:center;}
+    table{width:100%;border-collapse:collapse;font-size:11px;}
+    th,td{padding:4px 6px;border-bottom:1px solid var(--border);text-align:left;}
+    .scroll-y{max-height:220px;overflow-y:auto;}
+    .badge{font-size:11px;padding:2px 6px;border-radius:999px;background:var(--primary-soft);color:var(--primary);}
+    .row{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;color:var(--muted);}
+    .divider{height:1px;background:var(--border);margin:8px 0;}
+
+    /* Floating Button */
+    .fab-container{position:fixed;bottom:20px;right:20px;z-index:200;}
+    .fab-main{
+      width:55px;height:55px;border-radius:50%;background:var(--primary);color:#fff;border:none;
+      font-size:22px;display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;
+    }
+    .fab-options{
+      display:flex;flex-direction:column;align-items:flex-end;gap:10px;margin-bottom:10px;
+      opacity:0;pointer-events:none;transform:translateY(20px);transition:.25s ease;
+    }
+    .fab-options.show{opacity:1;pointer-events:auto;transform:translateY(0);}
+    .fab-btn{
+      background:#fff;border:1px solid var(--border);padding:8px 12px;border-radius:999px;
+      display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+    }
+    .fab-btn i{font-size:16px;color:var(--primary);}
+
+    /* Ledger Panel */
+    .ledger-panel{
+      position:fixed;bottom:0;left:0;right:0;height:70%;background:var(--card);
+      border-radius:16px 16px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.25);
+      transform:translateY(100%);transition:.35s ease;z-index:300;padding:16px;display:flex;flex-direction:column;
+    }
+    .ledger-panel.show{transform:translateY(0);}
+    .ledger-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+    .close-ledger{background:none;border:none;font-size:20px;color:var(--danger);cursor:pointer;}
+  </style>
+</head>
+<body>
 <div class="app-shell">
-<header>
-  <div class="brand"><i class="bi bi-shop-window"></i><span>Al Syed</span> POS</div>
-  <div class="user-info">
-    <div id="currentRoleLabel">POS Ready</div>
-    <div id="currentDateLabel"></div>
-  </div>
-</header>
-<main>
-  <div class="layout">
-
-    <!-- (Optional) Simple dashboard card -->
-    <div class="card">
-      <div style="font-size:14px;font-weight:600;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">
-        <span>Quick Overview</span>
-        <span style="font-size:11px;color:var(--muted);" id="summaryLabel"></span>
-      </div>
-      <div style="display:flex;gap:8px;font-size:12px;flex-wrap:wrap;">
-        <div>Products: <b id="summaryProducts">0</b></div>
-        <div>Expenses: <b id="summaryExpenses">0</b> PKR</div>
-        <div>Customers: <b id="summaryCustomers">0</b></div>
-      </div>
+  <header>
+    <div class="brand">
+      <i class="bi bi-shop-window"></i>
+      <span>Al Syed</span> POS
     </div>
-
-    <!-- Floating Button -->
-    <div class="fab-container">
-      <button class="fab-main" id="fabMain"><i class="bi bi-plus-lg"></i></button>
-      <div class="fab-options" id="fabOptions">
-        <button class="fab-btn" id="fabAddProduct"><i class="bi bi-box-seam"></i><span>Add Product</span></button>
-        <button class="fab-btn" id="fabAddExpense"><i class="bi bi-cash-coin"></i><span>Add Expense</span></button>
-        <button class="fab-btn" id="fabCustomerLedger"><i class="bi bi-people"></i><span>Customers</span></button>
-      </div>
+    <div class="user-info">
+      <div id="currentRoleLabel">POS Ready</div>
+      <div id="currentDateLabel"></div>
     </div>
+  </header>
 
-    <!-- Customer Ledger Panel -->
-    <div class="ledger-panel" id="ledgerPanel">
-      <div class="ledger-header">
-        <h3 style="font-size:16px;">Customer Ledger</h3>
-        <button class="close-ledger" id="closeLedger"><i class="bi bi-x-lg"></i></button>
-      </div>
-      <div class="ledger-body" style="flex:1;overflow-y:auto;padding-right:4px;">
-        <div class="field">
-          <label style="font-size:12px;">Customer Name</label>
-          <input type="text" id="ledgerCustomerName">
+  <main>
+    <div class="layout">
+
+      <!-- LEFT: SALE / CART -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="bi bi-receipt"></i>
+            <span>New Sale</span>
+          </div>
+          <span class="pill" id="saleTotalPill">Total: 0 PKR</span>
         </div>
+
         <div class="field">
-          <label style="font-size:12px;">Phone Number</label>
-          <input type="text" id="ledgerCustomerPhone">
+          <label>Select Product</label>
+          <select id="saleProductSelect">
+            <option value="">-- Select --</option>
+          </select>
         </div>
-        <button class="btn" style="width:100%;justify-content:center;margin-top:4px;" id="btnAddCustomer">
-          <i class="bi bi-person-plus"></i><span>Add Customer</span>
+
+        <div class="field">
+          <label>Quantity</label>
+          <input type="number" id="saleQty" value="1" min="1" />
+        </div>
+
+        <button class="btn full" id="btnAddToCart">
+          <i class="bi bi-cart-plus"></i>
+          <span>Add to Cart</span>
         </button>
-        <hr class="divider">
-        <h4 style="font-size:13px;margin-bottom:4px;">Customer List</h4>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>Customer (optional)</label>
+          <select id="saleCustomerSelect">
+            <option value="">Walk-in</option>
+          </select>
+        </div>
+
+        <div class="field" style="flex-direction:row;align-items:center;gap:6px;">
+          <input type="checkbox" id="saleAddToPending" style="width:auto;" />
+          <label for="saleAddToPending">Add invoice total to customer pending</label>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="scroll-y" style="margin-bottom:6px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Line</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cartTableBody"></tbody>
+          </table>
+        </div>
+
+        <button class="btn full" id="btnCompleteSale">
+          <i class="bi bi-check2-circle"></i>
+          <span>Complete Sale</span>
+        </button>
+      </div>
+
+      <!-- RIGHT: DASHBOARD / INVENTORY / EXPENSES -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom:8px;">
+          <div>Products: <b id="summaryProducts">0</b></div>
+          <div>Expenses: <b id="summaryExpenses">0</b> PKR</div>
+          <div>Customers: <b id="summaryCustomers">0</b></div>
+          <div>Today Sales: <b id="summarySales">0</b> PKR</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Inventory</div>
+        <div class="scroll-y" style="margin-bottom:8px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Expenses</div>
         <div class="scroll-y">
           <table>
             <thead>
-              <tr><th>Name</th><th>Pending</th><th></th></tr>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+              </tr>
             </thead>
-            <tbody id="ledgerTableBody"></tbody>
+            <tbody id="expenseTableBody"></tbody>
           </table>
         </div>
       </div>
-    </div>
 
+    </div>
+  </main>
+</div>
+
+<!-- Floating Button -->
+<div class="fab-container">
+  <button class="fab-main" id="fabMain">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+  <div class="fab-options" id="fabOptions">
+    <button class="fab-btn" id="fabAddProduct">
+      <i class="bi bi-box-seam"></i><span>Add Product</span>
+    </button>
+    <button class="fab-btn" id="fabAddExpense">
+      <i class="bi bi-cash-coin"></i><span>Add Expense</span>
+    </button>
+    <button class="fab-btn" id="fabCustomerLedger">
+      <i class="bi bi-people"></i><span>Customers</span>
+    </button>
   </div>
-</main>
+</div>
+
+<!-- Customer Ledger Panel -->
+<div class="ledger-panel" id="ledgerPanel">
+  <div class="ledger-header">
+    <h3 style="font-size:16px;">Customer Ledger</h3>
+    <button class="close-ledger" id="closeLedger">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <div class="ledger-body" style="flex:1;overflow-y:auto;padding-right:4px;">
+    <div class="field">
+      <label>Customer Name</label>
+      <input type="text" id="ledgerCustomerName" />
+    </div>
+    <div class="field">
+      <label>Phone Number</label>
+      <input type="text" id="ledgerCustomerPhone" />
+    </div>
+    <button class="btn full" id="btnAddCustomer">
+      <i class="bi bi-person-plus"></i><span>Add Customer</span>
+    </button>
+
+    <div class="divider"></div>
+
+    <h4 style="font-size:13px;margin-bottom:4px;">Customer List</h4>
+    <div class="scroll-y">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Pending</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="ledgerTableBody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <script>
-let state={customers:[],expenses:[],products:[]};
-function saveState(){localStorage.setItem("al_syed_pos",JSON.stringify(state));}
-function loadState(){let d=localStorage.getItem("al_syed_pos");if(d){try{state=JSON.parse(d)}catch(e){state={customers:[],expenses:[],products:[]}}}
-}
-loadState();
-function renderSummary(){
-  let p=state.products.length;
-  let e=state.expenses.reduce((t,x)=>t+x.amount,0);
-  let c=state.customers.length;
-  let sp=document.getElementById("summaryProducts");
-  let se=document.getElementById("summaryExpenses");
-  let sc=document.getElementById("summaryCustomers");
-  let sl=document.getElementById("summaryLabel");
-  if(sp)sp.textContent=p;
-  if(se)se.textContent=e;
-  if(sc)sc.textContent=c;
-  if(sl)sl.textContent="Updated";
-}
-function renderCustomers(){
-  let tbody=document.getElementById("ledgerTableBody");
-  if(!tbody)return;
-  tbody.innerHTML="";
-  state.customers.forEach(c=>{
-    let tr=document.createElement("tr");
-    tr.innerHTML=`<td>${c.name}</td><td>PKR ${c.pending}</td><td><button class="btn secondary" style="font-size:11px;padding:3px 8px;" onclick="receivePayment('${c.id}')">Receive</button></td>`;
-    tbody.appendChild(tr);
-  });
-}
-function receivePayment(id){
-  let c=state.customers.find(x=>x.id===id);
-  if(!c)return;
-  let amt=prompt("Enter amount received:",c.pending);
-  amt=parseInt(amt||0);
-  if(amt>0){c.pending-=amt;if(c.pending<0)c.pending=0;saveState();renderCustomers();}
-}
-let fabMain=document.getElementById("fabMain");
-let fabOptions=document.getElementById("fabOptions");
-if(fabMain&&fabOptions){fabMain.onclick=()=>{fabOptions.classList.toggle("show");};}
-let ledgerPanel=document.getElementById("ledgerPanel");
-let closeLedger=document.getElementById("closeLedger");
-let fabCustomerLedger=document.getElementById("fabCustomerLedger");
-if(fabCustomerLedger){fabCustomerLedger.onclick=()=>{ledgerPanel.classList.add("show");renderCustomers();};}
-if(closeLedger){closeLedger.onclick=()=>{ledgerPanel.classList.remove("show");};}
-let btnAddCustomer=document.getElementById("btnAddCustomer");
-if(btnAddCustomer){btnAddCustomer.onclick=()=>{
-  let name=document.getElementById("ledgerCustomerName").value.trim();
-  let phone=document.getElementById("ledgerCustomerPhone").value.trim();
-  if(!name){alert("Name required");return;}
-  state.customers.push({id:"C"+Date.now(),name,phone,pending:0});
-  saveState();renderCustomers();
-  document.getElementById("ledgerCustomerName").value="";
-  document.getElementById("ledgerCustomerPhone").value="";
+  // ---------- STATE ----------
+  let state = {
+    products: [],
+    expenses: [],
+    customers: [],
+    sales: []
+  };
+
+  function saveState(){
+    localStorage.setItem("al_syed_pos_full", JSON.stringify(state));
+  }
+
+  function loadState(){
+    let d = localStorage.getItem("al_syed_pos_full");
+    if(d){
+      try{ state = JSON.parse(d); }
+      catch(e){ state = {products:[],expenses:[],customers:[],sales:[]}; }
+    }
+  }
+
+  loadState();
+
+  // ---------- RENDER HELPERS ----------
+  function renderInventory(){
+    let tbody = document.getElementById("inventoryTableBody");
+    let select = document.getElementById("saleProductSelect");
+    tbody.innerHTML = "";
+    select.innerHTML = '<option value="">-- Select --</option>';
+
+    state.products.forEach(p=>{
+      let tr = document.createElement("tr");
+      tr.innerHTML = '<td>'+p.name+'</td><td>'+p.price+'</td>';
+      tbody.appendChild(tr);
+
+      let opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.name + " ("+p.price+")";
+      select.appendChild(opt);
+    });
+  }
+
+  function renderExpenses(){
+    let tbody = document.getElementById("expenseTableBody");
+    tbody.innerHTML = "";
+    state.expenses.forEach(e=>{
+      let tr = document.createElement("tr");
+      tr.innerHTML = '<td>'+e.title+'</td><td>'+e.amount+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function renderCustomers(){
+    let tbody = document.getElementById("ledgerTableBody");
+    let select = document.getElementById("saleCustomerSelect");
+    tbody.innerHTML = "";
+    select.innerHTML = '<option value="">Walk-in</option>';
+
+    state.customers.forEach(c=>{
+      let tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td>'+c.name+'</td>'+
+        '<td>PKR '+c.pending+'</td>'+
+        '<td><button class="btn secondary" style="font-size:11px;padding:3px 8px;" onclick="receivePayment(\''+c.id+'\')">Receive</button></td>';
+      tbody.appendChild(tr);
+
+      let opt = document.createElement("option");
+      opt.value = c.id;
+      opt.textContent = c.name + " (PKR "+c.pending+")";
+      select.appendChild(opt);
+    });
+  }
+
+  function renderSummary(){
+    let p = state.products.length;
+    let e = state.expenses.reduce((t,x)=>t + x.amount, 0);
+    let c = state.customers.length;
+    let today = new Date().toISOString().slice(0,10);
+    let s = state.sales.filter(x=>x.date === today).reduce((t,x)=>t + x.total, 0);
+
+    document.getElementById("summaryProducts").textContent = p;
+    document.getElementById("summaryExpenses").textContent = e;
+    document.getElementById("summaryCustomers").textContent = c;
+    document.getElementById("summarySales").textContent = s;
+  }
+
+  // ---------- CART ----------
+  let cart = [];
+
+  function renderCart(){
+    let tbody = document.getElementById("cartTableBody");
+    tbody.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item,idx)=>{
+      let line = item.qty * item.price;
+      total += line;
+      let tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td>'+item.name+'</td>'+
+        '<td>'+item.qty+'</td>'+
+        '<td>'+item.price+'</td>'+
+        '<td>'+line+'</td>'+
+        '<td><button class="btn secondary" style="font-size:10px;padding:2px 6px;" onclick="removeCartItem('+idx+')"><i class="bi bi-x"></i></button></td>';
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("saleTotalPill").textContent = "Total: "+total+" PKR";
+    return total;
+  }
+
+  function removeCartItem(idx){
+    cart.splice(idx,1);
+    renderCart();
+  }
+
+  // ---------- CUSTOMER PENDING ----------
+  function receivePayment(id){
+    let c = state.customers.find(x=>x.id === id);
+    if(!c) return;
+    let amt = prompt("Enter amount received:", c.pending);
+    amt = parseInt(amt || 0);
+    if(amt > 0){
+      c.pending -= amt;
+      if(c.pending < 0) c.pending = 0;
+      saveState();
+      renderCustomers();
+      renderSummary();
+    }
+  }
+
+  // ---------- FLOATING BUTTON ----------
+  let fabMain = document.getElementById("fabMain");
+  let fabOptions = document.getElementById("fabOptions");
+  fabMain.onclick = ()=>{ fabOptions.classList.toggle("show"); };
+
+  // ---------- LEDGER PANEL ----------
+  let ledgerPanel = document.getElementById("ledgerPanel");
+  document.getElementById("fabCustomerLedger").onclick = ()=>{
+    ledgerPanel.classList.add("show");
+    renderCustomers();
+  };
+  document.getElementById("closeLedger").onclick = ()=>{
+    ledgerPanel.classList.remove("show");
+  };
+
+  // ---------- ADD CUSTOMER ----------
+  document.getElementById("btnAddCustomer").onclick = ()=>{
+    let name = document.getElementById("ledgerCustomerName").value.trim();
+    let phone = document.getElementById("ledgerCustomerPhone").value.trim();
+    if(!name){ alert("Name required"); return; }
+
+    state.customers.push({
+      id: "C"+Date.now(),
+      name,
+      phone,
+      pending: 0
+    });
+
+    saveState();
+    document.getElementById("ledgerCustomerName").value = "";
+    document.getElementById("ledgerCustomerPhone").value = "";
+    renderCustomers();
+    renderSummary();
+  };
+
+  // ---------- ADD PRODUCT (FLOATING) ----------
+  document.getElementById("fabAddProduct").onclick = ()=>{
+    let name = prompt("Product name:");
+    if(!name) return;
+    let price = prompt("Sale price (PKR):");
+    price = parseInt(price || 0);
+    if(!price){ alert("Price required"); return; }
+
+    state.products.push({
+      id: "P"+Date.now(),
+      name,
+      price
+    });
+
+    saveState();
+    alert("Product saved: "+name+" (PKR "+price+")");
+    renderInventory();
+    renderSummary();
+  };
+
+  // ---------- ADD EXPENSE (FLOATING) ----------
+  document.getElementById("fabAddExpense").onclick = ()=>{
+    let title = prompt("Expense title:");
+    if(!title) return;
+    let amount = prompt("Expense amount (PKR):");
+    amount = parseInt(amount || 0);
+    if(!amount){ alert("Amount required"); return; }
+
+    state.expenses.push({
+      id: "E"+Date.now(),
+      title,
+      amount,
+      date: new Date().toISOString().slice(0,10)
+    });
+
+    saveState();
+    alert("Expense saved: "+title+" (PKR "+amount+")");
+    renderExpenses();
+    renderSummary();
+  };
+
+  // ---------- SALE BUTTONS ----------
+  document.getElementById("btnAddToCart").onclick = ()=>{
+    let pid = document.getElementById("saleProductSelect").value;
+    let qty = parseInt(document.getElementById("saleQty").value || 0);
+    if(!pid){ alert("Select product"); return; }
+    if(qty <= 0){ alert("Quantity must be > 0"); return; }
+
+    let p = state.products.find(x=>x.id === pid);
+    if(!p){ alert("Product not found"); return; }
+
+    cart.push({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      qty
+    });
+
+    renderCart();
+  };
+
+  document.getElementById("btnCompleteSale").onclick = ()=>{
+    let total = renderCart();
+    if(cart.length === 0){
+      alert("Cart is empty");
+      return;
+    }
+
+    let customerId = document.getElementById("saleCustomerSelect").value;
+    let addToPending = document.getElementById("saleAddToPending").checked;
+
+    let sale = {
+      id: "S"+Date.now(),
+      date: new Date().toISOString().slice(0,10),
+      total,
+      customerId: customerId || null,
+      items: cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty}))
+    };
+
+    state.sales.push(sale);
+
+    if(customerId && addToPending){
+      let c = state.customers.find(x=>x.id === customerId);
+      if(c){
+        c.pending += total;
+      }
+    }
+
+    saveState();
+    alert("Sale completed. Total: "+total+" PKR");
+    cart = [];
+    renderCart();
+    renderCustomers();
+    renderSummary();
+  };
+
+  // ---------- INIT ----------
+  let currentDateLabel = document.getElementById("currentDateLabel");
+  if(currentDateLabel){
+    currentDateLabel.textContent = new Date().toLocaleString();
+  }
+
+  renderInventory();
+  renderExpenses();
+  renderCustomers();
   renderSummary();
-};}
-let fabAddProduct=document.getElementById("fabAddProduct");
-if(fabAddProduct){fabAddProduct.onclick=()=>{
-  let name=prompt("Product name:");
-  if(!name)return;
-  let price=prompt("Sale price (PKR):");
-  price=parseInt(price||0);
-  if(!price){alert("Price required");return;}
-  state.products.push({id:"P"+Date.now(),name,price});
-  saveState();alert("Product saved: "+name+" (PKR "+price+")");renderSummary();
-};}
-let fabAddExpense=document.getElementById("fabAddExpense");
-if(fabAddExpense){fabAddExpense.onclick=()=>{
-  let title=prompt("Expense title:");
-  if(!title)return;
-  let amount=prompt("Expense amount (PKR):");
-  amount=parseInt(amount||0);
-  if(!amount){alert("Amount required");return;}
-  state.expenses.push({id:"E"+Date.now(),title,amount,date:new Date().toISOString().slice(0,10)});
-  saveState();alert("Expense saved: "+title+" (PKR "+amount+")");renderSummary();
-};}
-let currentDateLabel=document.getElementById("currentDateLabel");
-if(currentDateLabel){currentDateLabel.textContent=new Date().toLocaleString();}
-renderSummary();
 </script>
-</body></html>
+</body>
+</html>
