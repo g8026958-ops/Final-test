@@ -211,7 +211,27 @@ function renderInvoices(){const tbody=document.querySelector("#invoiceTable tbod
 function updateDashboard(){const todayStr=new Date().toISOString().slice(0,10);const monthStr=todayStr.slice(0,7);let dailyTotal=0,dailyCount=0,monthlyTotal=0,monthlyCount=0;state.invoices.forEach(inv=>{const d=inv.date.slice(0,10);const m=inv.date.slice(0,7);if(d===todayStr){dailyTotal+=inv.total;dailyCount++;}if(m===monthStr){monthlyTotal+=inv.total;monthlyCount++;}});document.getElementById("dailySales").innerText=`${state.settings.currency} ${dailyTotal.toFixed(0)}`;document.getElementById("dailySalesCount").innerText=`${dailyCount} invoices`;document.getElementById("monthlySales").innerText=`${state.settings.currency} ${monthlyTotal.toFixed(0)}`;document.getElementById("monthlySalesCount").innerText=`${monthlyCount} invoices`;let top=null;state.products.forEach(p=>{if(!top||(p.sold||0)>(top.sold||0)){top=p;}});if(top&&(top.sold||0)>0){document.getElementById("topItemName").innerText=top.name;document.getElementById("topItemQty").innerText=`${top.sold} units sold`;}else{document.getElementById("topItemName").innerText="-";document.getElementById("topItemQty").innerText="0 units sold";}}
 function resetSalesAndExpenses(){if(!confirm("Are you sure? This will delete all invoices & expenses, but keep products, customers, suppliers."))return;state.invoices=[];state.expenses=[];saveState();renderInvoices();renderExpenses();updateDashboard();alert("Sales & expenses reset done.");}
 function saveSettings(){state.settings.ownerWhatsApp=document.getElementById("ownerWhatsApp").value.trim();state.settings.adminWhatsApp=document.getElementById("adminWhatsApp").value.trim();state.settings.currency=document.getElementById("currency").value;saveState();renderProducts();renderCustomers();renderSuppliers();renderExpenses();renderInvoices();updateDashboard();alert("Settings saved");}
-function buildWhatsAppInvoiceLink(inv){const owner=state.settings.ownerWhatsApp||state.settings.adminWhatsApp||"";const c=inv.customerId?state.customers.find(x=>x.id===inv.customerId):null;let text=`*Invoice #${inv.id}*%0A`;text+=`Date: ${new Date(inv.date).toLocaleString()}%0A`;text+=`Customer: ${c?c.name:"Walk-in"}%0A`;text+=`Status: ${inv.paymentStatus.toUpperCase()}%0A`;text+=`------------------------%0A`;inv.items.forEach(it=>{const p=state.products.find(x=>x.id===it.prodId);if(!p)return;text+=`${p.name} x ${it.qty} = ${state.settings.currency} ${(it.qty*it.price).toFixed(0)}%0A`;});text+=`------------------------%0A`;text+=`Subtotal: ${state.settings.currency} ${inv.subtotal.toFixed(0)}%0A`;text+=`Discount: ${state.settings.currency} ${inv.discount.toFixed(0)}%0A`;text+=`Total: *${state.settings.currency} ${inv.total.toFixed(0)}*%0A`;text+=`%0AAl Syed Sales Point`;if(!owner)return"https://wa.me/?text="+text;return`https://wa.me/${owner}?text=${text}`;}
+function buildWhatsAppInvoiceLink(inv){
+    const owner = state.settings.ownerWhatsApp || state.settings.adminWhatsApp || "";
+    const c = inv.customerId ? state.customers.find(x => x.id === inv.customerId) : null;
+    let text = `*Invoice #${inv.id}*\n`;
+    text += `Date: ${new Date(inv.date).toLocaleString()}\n`;
+    text += `Customer: ${c ? c.name : "Walk-in"}\n`;
+    text += `Status: ${inv.paymentStatus.toUpperCase()}\n`;
+    text += `------------------------\n`;
+    inv.items.forEach(it => {
+        const p = state.products.find(x => x.id === it.prodId);
+        if (!p) return;
+        text += `${p.name} x ${it.qty} = ${state.settings.currency} ${(it.qty * it.price).toFixed(0)}\n`;
+    });
+    text += `------------------------\n`;
+    text += `Subtotal: ${state.settings.currency} ${inv.subtotal.toFixed(0)}\n`;
+    text += `Discount: ${state.settings.currency} ${inv.discount.toFixed(0)}\n`;
+    text += `Total: ${state.settings.currency} ${inv.total.toFixed(0)}\n`;
+    text += `\nAl Syed Sales Point`;
+    if (!owner) return "https://wa.me/?text=" + encodeURIComponent(text);
+    return `https://wa.me/${owner}?text=${encodeURIComponent(text)}`;
+}
 function sendWhatsAppNotification(inv){console.log("New sale invoice",inv.id);}
 init();
 </script>
